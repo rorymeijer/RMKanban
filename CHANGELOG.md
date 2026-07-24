@@ -8,6 +8,18 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 4 — Realtime & notificaties
+
+**Toegevoegd**
+
+- Reverb-broadcast (`CardMoved`) op een presence-channel per board — kaarten
+  bewegen live en aanwezigheid is afgeschermd tot board-leden.
+- In-app notificaties (database) plus e-mail bij @mentions, per gebruiker
+  instelbaar via notificatievoorkeuren.
+- Notificatie-endpoints: ophalen, als gelezen markeren, voorkeuren bijwerken.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 3 — Kaartdetails (backend)
 
 **Toegevoegd**

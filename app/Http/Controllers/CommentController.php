@@ -7,10 +7,12 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\Comment;
 use App\Models\User;
+use App\Notifications\CardMentionNotification;
 use App\Services\ActivityLogger;
 use App\Support\MentionParser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class CommentController extends Controller
 {
@@ -24,15 +26,29 @@ class CommentController extends Controller
             'body' => ['required', 'string', 'max:5000'],
         ]);
 
+        /** @var User $author */
+        $author = $request->user();
+
+        $mentionIds = MentionParser::resolve($data['body']);
+
         $comment = $card->comments()->create([
-            'user_id' => $request->user()?->id,
+            'user_id' => $author->id,
             'body' => $data['body'],
-            'mentions' => MentionParser::resolve($data['body']),
+            'mentions' => $mentionIds,
         ]);
 
         $this->activity->log('comment.created', $card, ['comment_id' => $comment->id], $card->board);
 
-        // De notificaties voor @mentions volgen in Fase 4.
+        // Notificeer genoemde gebruikers (behalve de auteur zelf).
+        $recipients = User::query()
+            ->whereIn('id', $mentionIds)
+            ->where('id', '!=', $author->id)
+            ->get();
+
+        if ($recipients->isNotEmpty()) {
+            Notification::send($recipients, new CardMentionNotification($card, $comment, $author));
+        }
+
         return back();
     }
 

@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\TwoFactorController;
@@ -104,6 +105,13 @@ Route::middleware('auth')->group(function (): void {
         ->name('trash.cards.restore');
     Route::delete('/boards/{board}/trash/cards/{card}', [TrashController::class, 'forceDeleteCard'])
         ->name('trash.cards.force');
+
+    // Notificaties (Fase 4).
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::patch('/user/notification-preferences', [NotificationController::class, 'updatePreferences'])
+        ->name('notifications.preferences');
 
     // Tweestapsverificatie.
     Route::post('/user/two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');

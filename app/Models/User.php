@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $two_factor_secret
  * @property list<string>|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
+ * @property array<string, mixed>|null $notification_preferences
  */
 class User extends Authenticatable
 {
@@ -41,6 +42,7 @@ class User extends Authenticatable
         'locale',
         'timezone',
         'is_admin',
+        'notification_preferences',
     ];
 
     /**
@@ -63,6 +65,7 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
             'two_factor_secret' => 'encrypted',
             'two_factor_recovery_codes' => 'encrypted:array',
+            'notification_preferences' => 'array',
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];

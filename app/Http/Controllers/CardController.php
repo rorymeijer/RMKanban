@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\CardMoved;
 use App\Models\BoardList;
 use App\Models\Card;
 use App\Services\ActivityLogger;
@@ -88,6 +89,9 @@ class CardController extends Controller
             'from_list' => $fromList,
             'to_list' => $target->id,
         ], $card->board);
+
+        // Live doorsturen naar iedereen die het board bekijkt (Reverb).
+        broadcast(CardMoved::fromCard($card))->toOthers();
 
         return back();
     }
