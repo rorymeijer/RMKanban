@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Card extends Model
@@ -51,5 +52,45 @@ class Card extends Model
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class, 'card_label');
+    }
+
+    /**
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at');
+    }
+
+    /**
+     * @return HasMany<Checklist, $this>
+     */
+    public function checklists(): HasMany
+    {
+        return $this->hasMany(Checklist::class)->orderBy('position');
+    }
+
+    /**
+     * @return HasMany<Attachment, $this>
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
+
+    /**
+     * @return HasMany<CardLink, $this>
+     */
+    public function links(): HasMany
+    {
+        return $this->hasMany(CardLink::class);
+    }
+
+    /**
+     * @return HasMany<CustomFieldValue, $this>
+     */
+    public function customFieldValues(): HasMany
+    {
+        return $this->hasMany(CustomFieldValue::class);
     }
 }

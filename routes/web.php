@@ -7,8 +7,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\CardLinkController;
+use App\Http\Controllers\ChecklistController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstallController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\TwoFactorController;
@@ -74,6 +79,24 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/cards/{card}/archive', [CardController::class, 'archive'])->name('cards.archive');
     Route::post('/cards/{card}/restore', [CardController::class, 'restore'])->name('cards.restore');
     Route::delete('/cards/{card}', [CardController::class, 'destroy'])->name('cards.destroy');
+
+    // Kaartdetails (Fase 3).
+    Route::post('/cards/{card}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/cards/{card}/checklists', [ChecklistController::class, 'store'])->name('checklists.store');
+    Route::post('/checklists/{checklist}/items', [ChecklistController::class, 'addItem'])->name('checklists.items.store');
+    Route::post('/checklist-items/{item}/toggle', [ChecklistController::class, 'toggleItem'])->name('checklists.items.toggle');
+
+    Route::post('/boards/{board}/labels', [LabelController::class, 'store'])->name('labels.store');
+    Route::post('/cards/{card}/labels', [LabelController::class, 'attach'])->name('cards.labels.attach');
+    Route::delete('/cards/{card}/labels/{label}', [LabelController::class, 'detach'])->name('cards.labels.detach');
+
+    Route::post('/cards/{card}/links', [CardLinkController::class, 'store'])->name('cards.links.store');
+    Route::delete('/cards/{card}/links/{link}', [CardLinkController::class, 'destroy'])->name('cards.links.destroy');
+
+    Route::post('/boards/{board}/custom-fields', [CustomFieldController::class, 'store'])->name('custom-fields.store');
+    Route::post('/cards/{card}/custom-fields/{field}', [CustomFieldController::class, 'setValue'])->name('cards.custom-fields.set');
 
     // Prullenbak.
     Route::get('/boards/{board}/trash', [TrashController::class, 'index'])->name('trash.index');

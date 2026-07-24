@@ -59,6 +59,14 @@ class Board extends Model
     }
 
     /**
+     * @return HasMany<CustomField, $this>
+     */
+    public function customFields(): HasMany
+    {
+        return $this->hasMany(CustomField::class)->orderBy('position');
+    }
+
+    /**
      * @return BelongsToMany<User, $this>
      */
     public function members(): BelongsToMany

@@ -8,6 +8,25 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 3 — Kaartdetails (backend)
+
+**Toegevoegd**
+
+- Reacties op kaarten met @mention-herkenning (koppelt genoemde gebruikers).
+- Checklists met items, toewijzing en een voortgangsberekening.
+- Labels: aanmaken op boardniveau, koppelen/ontkoppelen aan kaarten (met
+  board-validatie).
+- Kaartrelaties (`blocks` / `related` / `duplicate`) met zelf-referentie- en
+  board-validatie.
+- Custom fields (tekst, getal, keuze, datum, checkbox, gebruiker) per board,
+  met waarden per kaart in `jsonb` (GIN-index op PostgreSQL).
+- Bijlagen-datamodel en markdown-beschrijving op kaarten.
+
+**Nog te doen (Fase 3 frontend):** kaartdetail-modal met live markdown-preview en
+de bijbehorende UI-interacties.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 2 — Kern-kanban
 
 **Toegevoegd**
