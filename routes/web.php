@@ -5,9 +5,12 @@ declare(strict_types=1);
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardListController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\TrashController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\WorkspaceMemberController;
 use App\Http\Middleware\EnsureAdmin;
@@ -49,7 +52,35 @@ Route::post('/logout', [AuthController::class, 'logout'])
  */
 Route::middleware('auth')->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Boards.
+    Route::post('/workspaces/{workspace}/boards', [BoardController::class, 'store'])->name('boards.store');
     Route::get('/boards/{board:slug}', [BoardController::class, 'show'])->name('boards.show');
+    Route::patch('/boards/{board}', [BoardController::class, 'update'])->name('boards.update');
+    Route::post('/boards/{board}/archive', [BoardController::class, 'archive'])->name('boards.archive');
+    Route::post('/boards/{board}/restore', [BoardController::class, 'restore'])->name('boards.restore');
+
+    // Lijsten.
+    Route::post('/boards/{board}/lists', [BoardListController::class, 'store'])->name('lists.store');
+    Route::patch('/lists/{list}', [BoardListController::class, 'update'])->name('lists.update');
+    Route::post('/lists/{list}/move', [BoardListController::class, 'move'])->name('lists.move');
+    Route::post('/lists/{list}/archive', [BoardListController::class, 'archive'])->name('lists.archive');
+    Route::post('/lists/{list}/restore', [BoardListController::class, 'restore'])->name('lists.restore');
+
+    // Kaarten.
+    Route::post('/lists/{list}/cards', [CardController::class, 'store'])->name('cards.store');
+    Route::patch('/cards/{card}', [CardController::class, 'update'])->name('cards.update');
+    Route::post('/cards/{card}/move', [CardController::class, 'move'])->name('cards.move');
+    Route::post('/cards/{card}/archive', [CardController::class, 'archive'])->name('cards.archive');
+    Route::post('/cards/{card}/restore', [CardController::class, 'restore'])->name('cards.restore');
+    Route::delete('/cards/{card}', [CardController::class, 'destroy'])->name('cards.destroy');
+
+    // Prullenbak.
+    Route::get('/boards/{board}/trash', [TrashController::class, 'index'])->name('trash.index');
+    Route::post('/boards/{board}/trash/cards/{card}/restore', [TrashController::class, 'restoreCard'])
+        ->name('trash.cards.restore');
+    Route::delete('/boards/{board}/trash/cards/{card}', [TrashController::class, 'forceDeleteCard'])
+        ->name('trash.cards.force');
 
     // Tweestapsverificatie.
     Route::post('/user/two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');

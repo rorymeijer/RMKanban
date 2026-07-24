@@ -8,6 +8,24 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 2 — Kern-kanban
+
+**Toegevoegd**
+
+- Boards aanmaken/bewerken/archiveren/herstellen; een nieuw board krijgt meteen
+  drie standaardlijsten.
+- Lijsten en kaarten aanmaken/bewerken, met WIP-limiet en inklapbare lijsten.
+- Verplaatsen van lijsten en kaarten via LexoRank-strings — geen hernummering van
+  hele lijsten, ook bij verplaatsen tussen lijsten.
+- Drag & drop-board met dnd-kit inclusief volledige toetsenbordbediening en
+  optimistische UI; kaarten en lijsten toevoegen vanuit het board.
+- Archivering en een prullenbak met herstel; soft-deleted kaarten worden na 30
+  dagen definitief verwijderd (`board:prune-trash`, dagelijks gepland).
+- Audit-log: elke schrijfactie schrijft een activity-record met actor, diff en
+  ip/user-agent.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 1 — Auth & tenancy
 
 **Toegevoegd**
