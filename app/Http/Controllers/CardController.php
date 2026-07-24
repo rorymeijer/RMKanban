@@ -8,13 +8,19 @@ use App\Events\CardMoved;
 use App\Models\BoardList;
 use App\Models\Card;
 use App\Services\ActivityLogger;
+use App\Services\AutomationEngine;
+use App\Services\WebhookDispatcher;
 use App\Support\LexoRank;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-    public function __construct(private readonly ActivityLogger $activity) {}
+    public function __construct(
+        private readonly ActivityLogger $activity,
+        private readonly AutomationEngine $automations,
+        private readonly WebhookDispatcher $webhooks,
+    ) {}
 
     public function store(Request $request, BoardList $list): RedirectResponse
     {
@@ -92,6 +98,14 @@ class CardController extends Controller
 
         // Live doorsturen naar iedereen die het board bekijkt (Reverb).
         broadcast(CardMoved::fromCard($card))->toOthers();
+
+        // Automations en webhooks op de trigger "card_moved".
+        $this->automations->dispatch('card_moved', $card);
+        $board = $card->board()->firstOrFail();
+        $this->webhooks->dispatch($board, 'card.moved', [
+            'card_id' => $card->id,
+            'list_id' => $target->id,
+        ]);
 
         return back();
     }

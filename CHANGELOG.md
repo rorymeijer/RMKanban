@@ -8,6 +8,23 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 6 — Automations & API
+
+**Toegevoegd**
+
+- No-code automations (Butler-achtig): triggers, condities en acties
+  (toewijzen, labelen, verplaatsen, archiveren, reageren), met per-run logging en
+  handmatig opnieuw uitvoeren.
+- Uitgaande webhooks met HMAC-SHA256-signing en retries met exponentiële backoff
+  (via een queue-job).
+- REST API v1 (token-geauthenticeerd via Sanctum) met rate limiting per token en
+  een zelf-gehoste OpenAPI 3.1-spec op `/api/docs` (geen CDN).
+- Persoonlijke API-tokens met scopes.
+- Import van Trello JSON-exports en export van een board als JSON.
+- iCal-feed met de deadlines van een board.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 5 — Weergaves & zoeken (backend)
 
 **Toegevoegd**

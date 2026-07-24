@@ -75,6 +75,22 @@ class Board extends Model
     }
 
     /**
+     * @return HasMany<Webhook, $this>
+     */
+    public function webhooks(): HasMany
+    {
+        return $this->hasMany(Webhook::class);
+    }
+
+    /**
+     * @return HasMany<Automation, $this>
+     */
+    public function automations(): HasMany
+    {
+        return $this->hasMany(Automation::class);
+    }
+
+    /**
      * @return BelongsToMany<User, $this>
      */
     public function members(): BelongsToMany

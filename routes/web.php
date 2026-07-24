@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\CardController;
@@ -13,6 +15,8 @@ use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\MyWorkController;
@@ -22,6 +26,7 @@ use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WorkspaceMemberController;
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureRegistrationOpen;
@@ -118,6 +123,17 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/boards/{board}/filters', [SavedFilterController::class, 'index'])->name('filters.index');
     Route::post('/boards/{board}/filters', [SavedFilterController::class, 'store'])->name('filters.store');
     Route::delete('/filters/{filter}', [SavedFilterController::class, 'destroy'])->name('filters.destroy');
+
+    // Automations, webhooks, API-tokens, import/export (Fase 6).
+    Route::post('/boards/{board}/automations', [AutomationController::class, 'store'])->name('automations.store');
+    Route::post('/automations/{automation}/run', [AutomationController::class, 'run'])->name('automations.run');
+    Route::post('/boards/{board}/webhooks', [WebhookController::class, 'store'])->name('webhooks.store');
+    Route::delete('/boards/{board}/webhooks/{webhook}', [WebhookController::class, 'destroy'])->name('webhooks.destroy');
+    Route::post('/user/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+    Route::delete('/user/api-tokens/{tokenId}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+    Route::get('/boards/{board}/export.json', [ExportController::class, 'json'])->name('boards.export.json');
+    Route::get('/boards/{board}/calendar.ics', [ExportController::class, 'ical'])->name('boards.ical');
+    Route::post('/workspaces/{workspace}/import/trello', [ImportController::class, 'trello'])->name('import.trello');
 
     // Notificaties (Fase 4).
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
