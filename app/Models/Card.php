@@ -11,11 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Card extends Model
 {
     /** @use HasFactory<CardFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, Searchable, SoftDeletes;
 
     protected $fillable = [
         'board_id', 'list_id', 'title', 'description', 'position',
@@ -92,5 +93,33 @@ class Card extends Model
     public function customFieldValues(): HasMany
     {
         return $this->hasMany(CustomFieldValue::class);
+    }
+
+    /**
+     * @return BelongsToMany<User, $this>
+     */
+    public function assignees(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'card_user');
+    }
+
+    /**
+     * Wat Meilisearch indexeert.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'board_id' => $this->board_id,
+            'title' => $this->title,
+            'description' => (string) $this->description,
+        ];
+    }
+
+    public function shouldBeSearchable(): bool
+    {
+        return $this->archived_at === null;
     }
 }

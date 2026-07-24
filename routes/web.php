@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
@@ -14,8 +15,11 @@ use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\MyWorkController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SavedFilterController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\WorkspaceMemberController;
@@ -105,6 +109,15 @@ Route::middleware('auth')->group(function (): void {
         ->name('trash.cards.restore');
     Route::delete('/boards/{board}/trash/cards/{card}', [TrashController::class, 'forceDeleteCard'])
         ->name('trash.cards.force');
+
+    // Weergaves & zoeken (Fase 5).
+    Route::get('/my-work', [MyWorkController::class, 'index'])->name('my-work');
+    Route::get('/search', SearchController::class)->name('search');
+    Route::post('/cards/{card}/assignees', [AssignmentController::class, 'store'])->name('cards.assignees.store');
+    Route::delete('/cards/{card}/assignees/{user}', [AssignmentController::class, 'destroy'])->name('cards.assignees.destroy');
+    Route::get('/boards/{board}/filters', [SavedFilterController::class, 'index'])->name('filters.index');
+    Route::post('/boards/{board}/filters', [SavedFilterController::class, 'store'])->name('filters.store');
+    Route::delete('/filters/{filter}', [SavedFilterController::class, 'destroy'])->name('filters.destroy');
 
     // Notificaties (Fase 4).
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

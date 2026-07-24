@@ -8,6 +8,23 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 5 — Weergaves & zoeken (backend)
+
+**Toegevoegd**
+
+- Full-text zoeken over kaarten via Laravel Scout/Meilisearch, afgeschermd tot
+  boards waartoe de gebruiker toegang heeft.
+- "Mijn werk": alle aan de gebruiker toegewezen of door hem aangemaakte kaarten
+  over boards heen.
+- Kaart-toewijzingen (assignees) met board-toegangscontrole.
+- Opgeslagen weergaves (persoonlijk of gedeeld) per board, met view-type en
+  filtercriteria.
+
+**Nog te doen (Fase 5 frontend):** tabel-, kalender- en tijdlijnweergave en de
+command palette.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 4 — Realtime & notificaties
 
 **Toegevoegd**

@@ -67,6 +67,14 @@ class Board extends Model
     }
 
     /**
+     * @return HasMany<SavedFilter, $this>
+     */
+    public function savedFilters(): HasMany
+    {
+        return $this->hasMany(SavedFilter::class);
+    }
+
+    /**
      * @return BelongsToMany<User, $this>
      */
     public function members(): BelongsToMany
