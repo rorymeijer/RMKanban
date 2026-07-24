@@ -1,0 +1,40 @@
+# Changelog
+
+Alle noemenswaardige wijzigingen aan Board worden hier vastgelegd.
+Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
+
+Bij elke release staan eventuele **handmatige stappen** vermeld die na
+`./update.sh` nodig zijn.
+
+## [Unreleased]
+
+### Fase 0 — Infrastructuur & installer
+
+**Toegevoegd**
+
+- Docker-stack met één platte HTTP-poort (8080), zonder eigen reverse proxy of TLS:
+  `web` (nginx), `app` (php-fpm), `postgres`, `valkey`, `meilisearch`, `reverb`,
+  `queue-worker` en `scheduler`. `postgres` en `valkey` zijn alleen intern bereikbaar.
+- Multi-stage Dockerfile (composer- en node-build in aparte stages, slanke non-root
+  runtime), healthchecks en `depends_on: condition: service_healthy`, named volumes.
+- Gebundelde PostgreSQL met vaste interne credentials; de gebruiker raakt de database
+  nooit aan.
+- Entrypoint-script dat `APP_KEY`/`APP_SECRET` genereert en persisteert, op de database
+  wacht en `migrate --force` draait.
+- `EnsureInstalled`-middleware die alle routes naar `/install` stuurt tot er een
+  beheerder is, en de installer daarna permanent blokkeert.
+- Meerstaps web-installer (toepassing → beheerder → optioneel SMTP) met race-bescherming
+  (atomic lock + unieke constraints). Bij voltooien: beheerder + workspace + demo-board,
+  automatisch inloggen.
+- `GET /api/health` met `installed`-vlag, versie en status van
+  database/redis/meilisearch/reverb.
+- Kern-datamodel: users, settings, workspaces, workspace_members, boards, board_members,
+  lists, cards, labels, activities — met LexoRank-ordening en soft deletes.
+- Frontend-fundament: Inertia v2 + React 19 + TypeScript (strict) + Vite, Tailwind v4
+  met licht/donker thema, i18n-laag (nl standaard, en), installer- en board-UI.
+- Scripts: `update.sh` (met pre-migratie-dump en rollback), `backup.sh` (retentie +
+  `--restore`), `console.sh`.
+- CI (GitHub Actions): PHPStan level 8, Pest, Pint, ESLint en de Vite-build.
+- Caddyfile-snippet in de README; documentatie in `docs/`.
+
+**Handmatige stappen na update:** geen (eerste release).

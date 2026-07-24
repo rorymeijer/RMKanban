@@ -1,0 +1,40 @@
+export const en: Record<string, string> = {
+    'app.tagline': 'Modern, self-hosted work management',
+
+    'install.title': 'Install Board',
+    'install.step.app': 'Application',
+    'install.step.admin': 'Administrator',
+    'install.step.smtp': 'Email (optional)',
+    'install.app.name': 'Display name',
+    'install.app.locale': 'Default language',
+    'install.app.timezone': 'Timezone',
+    'install.admin.name': 'Name',
+    'install.admin.username': 'Username',
+    'install.admin.email': 'Email address',
+    'install.admin.password': 'Password',
+    'install.admin.password_confirmation': 'Confirm password',
+    'install.smtp.hint': 'You can configure SMTP now or later in the admin panel.',
+    'install.smtp.test': 'Send test email',
+    'install.finish': 'Finish installation',
+    'install.next': 'Next',
+    'install.back': 'Back',
+    'install.skip': 'Skip',
+
+    'auth.login.title': 'Sign in',
+    'auth.login.field': 'Email or username',
+    'auth.login.password': 'Password',
+    'auth.login.remember': 'Remember me',
+    'auth.login.submit': 'Sign in',
+
+    'dashboard.title': 'My work',
+    'dashboard.boards': 'Boards',
+    'dashboard.empty': 'No boards yet. Create one to get started.',
+
+    'board.add_list': 'Add list',
+    'board.add_card': 'Add card',
+    'board.wip_exceeded': 'WIP limit exceeded',
+
+    'common.logout': 'Sign out',
+    'common.loading': 'Loading…',
+    'common.theme': 'Theme',
+};

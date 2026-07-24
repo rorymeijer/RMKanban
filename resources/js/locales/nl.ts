@@ -1,0 +1,40 @@
+export const nl: Record<string, string> = {
+    'app.tagline': 'Modern, self-hosted werkbeheer',
+
+    'install.title': 'Board installeren',
+    'install.step.app': 'Toepassing',
+    'install.step.admin': 'Beheerder',
+    'install.step.smtp': 'E-mail (optioneel)',
+    'install.app.name': 'Weergavenaam',
+    'install.app.locale': 'Standaardtaal',
+    'install.app.timezone': 'Tijdzone',
+    'install.admin.name': 'Naam',
+    'install.admin.username': 'Gebruikersnaam',
+    'install.admin.email': 'E-mailadres',
+    'install.admin.password': 'Wachtwoord',
+    'install.admin.password_confirmation': 'Wachtwoord bevestigen',
+    'install.smtp.hint': 'SMTP kun je nu of later in het adminpaneel instellen.',
+    'install.smtp.test': 'Test-mail versturen',
+    'install.finish': 'Installatie voltooien',
+    'install.next': 'Volgende',
+    'install.back': 'Terug',
+    'install.skip': 'Overslaan',
+
+    'auth.login.title': 'Inloggen',
+    'auth.login.field': 'E-mail of gebruikersnaam',
+    'auth.login.password': 'Wachtwoord',
+    'auth.login.remember': 'Onthoud mij',
+    'auth.login.submit': 'Inloggen',
+
+    'dashboard.title': 'Mijn werk',
+    'dashboard.boards': 'Boards',
+    'dashboard.empty': 'Nog geen boards. Maak er een aan om te beginnen.',
+
+    'board.add_list': 'Lijst toevoegen',
+    'board.add_card': 'Kaart toevoegen',
+    'board.wip_exceeded': 'WIP-limiet overschreden',
+
+    'common.logout': 'Uitloggen',
+    'common.loading': 'Laden…',
+    'common.theme': 'Thema',
+};
