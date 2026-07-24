@@ -15,6 +15,8 @@ class BoardController extends Controller
 {
     public function show(Board $board): Response
     {
+        $this->authorize('view', $board);
+
         $board->load([
             'lists' => fn ($q) => $q->whereNull('archived_at')->orderBy('position'),
             'lists.cards' => fn ($q) => $q->whereNull('archived_at')->orderBy('position'),

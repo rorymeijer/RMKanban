@@ -8,6 +8,25 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 
 ## [Unreleased]
 
+### Fase 1 — Auth & tenancy
+
+**Toegevoegd**
+
+- Rollen (`owner`, `admin`, `member`, `viewer`, `guest`) als enum met hiërarchie,
+  plus `WorkspacePolicy` en `BoardPolicy` (globale beheerders omzeilen de policy).
+- Effectieve board-rol: expliciet board-lidmaatschap wint, anders erft een
+  niet-privé board de workspace-rol; privé-boards vereisen expliciet lidmaatschap.
+- Tweestapsverificatie (TOTP, RFC 6238) volledig in pure PHP — geen externe
+  afhankelijkheid. In-/uitschakelen, bevestigen, herstelcodes en een
+  login-challenge (code of herstelcode).
+- Zelfregistratie, standaard dicht, via `REGISTRATION_OPEN` te openen; een nieuwe
+  gebruiker krijgt automatisch een eigen workspace.
+- Workspace-uitnodigingen (aanmaken, accepteren via token, leden verwijderen).
+- Adminpaneel-skelet (`/admin`, alleen voor globale beheerders) met kerncijfers en
+  recente gebruikers.
+
+**Handmatige stappen na update:** geen.
+
 ### Fase 0 — Infrastructuur & installer
 
 **Toegevoegd**

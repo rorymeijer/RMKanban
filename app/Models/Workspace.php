@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Database\Factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Workspace extends Model
@@ -45,5 +47,24 @@ class Workspace extends Model
     public function boards(): HasMany
     {
         return $this->hasMany(Board::class);
+    }
+
+    /**
+     * De rol van een gebruiker binnen deze workspace, of null als geen lid.
+     */
+    public function roleFor(User $user): ?Role
+    {
+        $member = $this->members()->where('users.id', $user->id)->first();
+
+        if ($member === null) {
+            return null;
+        }
+
+        $pivot = $member->getRelation('pivot');
+        $role = $pivot instanceof Pivot
+            ? (string) $pivot->getAttribute('role')
+            : '';
+
+        return Role::tryFrom($role);
     }
 }
