@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/lists/{list}/restore', [BoardListController::class, 'restore'])->name('lists.restore');
 
     // Kaarten.
+    Route::get('/cards/{card}/details', [CardController::class, 'details'])->name('cards.details');
     Route::post('/lists/{list}/cards', [CardController::class, 'store'])->name('cards.store');
     Route::patch('/cards/{card}', [CardController::class, 'update'])->name('cards.update');
     Route::post('/cards/{card}/move', [CardController::class, 'move'])->name('cards.move');

@@ -27,10 +27,12 @@ class SearchController extends Controller
             ->take(50)
             ->get()
             ->filter(fn (Card $card): bool => in_array($card->board_id, $boardIds, true))
+            ->load('board:id,slug')
             ->map(fn (Card $card): array => [
                 'id' => $card->id,
                 'title' => $card->title,
                 'board_id' => $card->board_id,
+                'board_slug' => $card->board?->slug,
             ])
             ->values()
             ->all();

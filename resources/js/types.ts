@@ -34,6 +34,7 @@ export interface Card {
     title: string;
     position: string;
     cover_color: string | null;
+    start_date?: string | null;
     due_date: string | null;
     labels: Label[];
 }

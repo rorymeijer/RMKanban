@@ -3,6 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { CommandPalette } from '@/components/CommandPalette';
 import { useTranslation } from '@/lib/i18n';
 import type { SharedProps } from '@/types';
 
@@ -13,6 +14,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
     return (
         <div className="flex min-h-full flex-col">
+            <CommandPalette />
             <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur">
                 <Link href="/" className="flex items-center gap-2 font-semibold">
                     <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">

@@ -7,10 +7,15 @@ namespace App\Http\Controllers;
 use App\Events\CardMoved;
 use App\Models\BoardList;
 use App\Models\Card;
+use App\Models\Checklist;
+use App\Models\ChecklistItem;
+use App\Models\Comment;
+use App\Models\Label;
 use App\Services\ActivityLogger;
 use App\Services\AutomationEngine;
 use App\Services\WebhookDispatcher;
 use App\Support\LexoRank;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -21,6 +26,69 @@ class CardController extends Controller
         private readonly AutomationEngine $automations,
         private readonly WebhookDispatcher $webhooks,
     ) {}
+
+    /**
+     * Volledige kaartdetails voor de kaartdetail-modal (JSON).
+     */
+    public function details(Card $card): JsonResponse
+    {
+        $board = $card->board()->firstOrFail();
+        $this->authorize('view', $board);
+
+        $card->load([
+            'labels',
+            'assignees:id,name,username',
+            'checklists.items',
+            'comments.author:id,name,username',
+            'links.linkedCard:id,title',
+            'customFieldValues',
+            'board.labels',
+            'board.customFields',
+            'board.members:id,name,username',
+        ]);
+
+        return response()->json([
+            'id' => $card->id,
+            'title' => $card->title,
+            'description' => $card->description,
+            'cover_color' => $card->cover_color,
+            'start_date' => $card->start_date?->toDateString(),
+            'due_date' => $card->due_date?->toDateString(),
+            'labels' => $card->labels->map(fn (Label $l): array => [
+                'id' => $l->id, 'name' => $l->name, 'color' => $l->color,
+            ])->all(),
+            'assignees' => $card->assignees->map(fn ($u): array => [
+                'id' => $u->id, 'name' => $u->name, 'username' => $u->username,
+            ])->all(),
+            'checklists' => $card->checklists->map(fn (Checklist $c): array => [
+                'id' => $c->id,
+                'title' => $c->title,
+                'progress' => $c->progress(),
+                'items' => $c->items->map(fn (ChecklistItem $i): array => [
+                    'id' => $i->id, 'content' => $i->content, 'completed' => $i->completed,
+                ])->all(),
+            ])->all(),
+            'comments' => $card->comments->map(fn (Comment $c): array => [
+                'id' => $c->id,
+                'body' => $c->body,
+                'author' => $c->author?->name,
+                'created_at' => $c->created_at?->toDateTimeString(),
+            ])->all(),
+            'links' => $card->links->map(fn ($l): array => [
+                'id' => $l->id, 'type' => $l->type,
+                'card' => ['id' => $l->linkedCard?->id, 'title' => $l->linkedCard?->title],
+            ])->all(),
+            'board' => [
+                'id' => $board->id,
+                'labels' => $board->labels->map(fn (Label $l): array => [
+                    'id' => $l->id, 'name' => $l->name, 'color' => $l->color,
+                ])->all(),
+                'members' => $board->members->map(fn ($u): array => [
+                    'id' => $u->id, 'name' => $u->name, 'username' => $u->username,
+                ])->all(),
+            ],
+        ]);
+    }
 
     public function store(Request $request, BoardList $list): RedirectResponse
     {

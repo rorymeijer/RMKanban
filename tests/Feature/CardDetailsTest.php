@@ -103,6 +103,20 @@ it('verbiedt een relatie van een kaart naar zichzelf', function (): void {
         ->assertStatus(422);
 });
 
+it('levert volledige kaartdetails als JSON voor de modal', function (): void {
+    Checklist::create(['card_id' => $this->card->id, 'title' => 'Taken', 'position' => LexoRank::first()]);
+
+    $this->actingAs($this->owner)
+        ->getJson("/cards/{$this->card->id}/details")
+        ->assertOk()
+        ->assertJsonStructure([
+            'id', 'title', 'description', 'labels', 'assignees',
+            'checklists', 'comments', 'links',
+            'board' => ['id', 'labels', 'members'],
+        ])
+        ->assertJsonPath('checklists.0.title', 'Taken');
+});
+
 it('definieert een custom field en zet een waarde', function (): void {
     $this->actingAs($this->owner)
         ->post("/boards/{$this->board->id}/custom-fields", ['name' => 'Prioriteit', 'type' => 'number'])

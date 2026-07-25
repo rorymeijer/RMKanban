@@ -3,7 +3,15 @@ import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import type { Card } from '@/types';
 
-export function CardItem({ card, overlay = false }: { card: Card; overlay?: boolean }) {
+export function CardItem({
+    card,
+    overlay = false,
+    onOpen,
+}: {
+    card: Card;
+    overlay?: boolean;
+    onOpen?: (id: number) => void;
+}) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: card.id,
         disabled: overlay,
@@ -20,6 +28,7 @@ export function CardItem({ card, overlay = false }: { card: Card; overlay?: bool
             style={overlay ? undefined : style}
             {...(overlay ? {} : attributes)}
             {...(overlay ? {} : listeners)}
+            onClick={() => onOpen?.(card.id)}
             className={cn(
                 'cursor-grab rounded-lg border bg-card p-3 text-sm shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 isDragging && 'opacity-40',

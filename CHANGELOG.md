@@ -55,8 +55,8 @@ Caddy → installer → werkend Kanban-platform.
 - Opgeslagen weergaves (persoonlijk of gedeeld) per board, met view-type en
   filtercriteria.
 
-**Nog te doen (Fase 5 frontend):** tabel-, kalender- en tijdlijnweergave en de
-command palette.
+**Frontend afgerond:** per board omschakelbare tabel-, kalender- en
+tijdlijnweergave, plus een command palette (⌘K / Ctrl+K) voor navigeren en zoeken.
 
 **Handmatige stappen na update:** geen.
 
@@ -86,8 +86,9 @@ command palette.
   met waarden per kaart in `jsonb` (GIN-index op PostgreSQL).
 - Bijlagen-datamodel en markdown-beschrijving op kaarten.
 
-**Nog te doen (Fase 3 frontend):** kaartdetail-modal met live markdown-preview en
-de bijbehorende UI-interacties.
+**Frontend afgerond:** kaartdetail-modal (klik op een kaart) met live
+markdown-preview, checklists met voortgangsbalk, reacties met @mentions, labels,
+deadlines, assignees en kaartrelaties.
 
 **Handmatige stappen na update:** geen.
 

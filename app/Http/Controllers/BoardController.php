@@ -138,6 +138,7 @@ class BoardController extends Controller
             'title' => $card->title,
             'position' => $card->position,
             'cover_color' => $card->cover_color,
+            'start_date' => $card->start_date?->toDateString(),
             'due_date' => $card->due_date?->toDateString(),
             'labels' => $card->labels->map(fn (Label $label): array => [
                 'id' => $label->id,
