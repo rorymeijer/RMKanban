@@ -9,7 +9,7 @@ export const en: Record<string, string> = {
     'install.license.hint': 'Received a license key? Paste it below.',
     'install.license.key': 'License key',
     'install.license.placeholder': 'Paste your license key…',
-    'install.license.skip_note': 'No key? Leave it empty — you start on the free community edition and can enter a license later under Admin → License.',
+    'install.license.skip_note': 'No key? You can enter a license later under Admin → License. Board stays locked until a valid license is entered.',
     'install.app.name': 'Display name',
     'install.app.locale': 'Default language',
     'install.app.timezone': 'Timezone',

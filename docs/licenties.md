@@ -9,9 +9,10 @@ op upgrades en intrekking gecontroleerd.
 
 1. Je draait de licentieserver (`license-server/`) en genereert een sleutelpaar
    (gebeurt automatisch bij de eerste start).
-2. Als **leverancier** bak je de **publieke sleutel** in Board in via
-   `LICENSE_PUBLIC_KEY` (en zet je `LICENSE_ENFORCE=true` + optioneel
-   `LICENSE_SERVER_URL`). Dit is geen geheim en is voor al je klanten hetzelfde.
+2. Als **leverancier** bak je de **publieke sleutel** (en optioneel de
+   server-URL) in de broncode in via `config/license.php` — niet via env/compose.
+   Dit is geen geheim en voor al je klanten hetzelfde; met alleen de publieke
+   sleutel kan niemand een geldige licentie namaken.
 3. In de licentieserver maak je **pakketten** aan en geef je **licenties** uit.
 4. De klant voert zijn **licentiesleutel** in tijdens de **installatie**
    (stap *Licentie*) — of later onder **Beheer → Licentie**. De sleutel komt dus
@@ -32,14 +33,28 @@ op upgrades en intrekking gecontroleerd.
 | Feature-flags | `automations`, `api`, `webhooks`, `sso`, `custom_fields`, `realtime`, `search` |
 | Geldigheid | vervaldatum + respijtperiode (dagen) |
 
-## Modi
+## Model: altijd gelicentieerd
 
-- `LICENSE_ENFORCE=false` → alles onbeperkt (open-source/self-hosted zonder
-  commerciële limieten).
-- `LICENSE_ENFORCE=true` (standaard):
-  - **Geldige licentie** → de limieten/features van het pakket.
-  - **Geen/ongeldige/verlopen licentie** (voorbij respijt) → de **community-tier**
-    (standaard: 3 gebruikers, 1 workspace, 3 boards, alleen `custom_fields`).
+Board is standaard **altijd gelicentieerd** en handhaving zit **in de code**
+(`config/license.php`), bewust niet als env-/compose-knop:
+
+- **Geldige licentie** → de limieten/features van het pakket.
+- **Geen/ongeldige/verlopen licentie** (voorbij respijt) → **geblokkeerde modus**:
+  de `EnsureLicensed`-middleware stuurt beheerders naar *Beheer → Licentie* om een
+  sleutel in te voeren, en overige gebruikers naar een "licentie vereist"-scherm.
+
+Waarom in de code en niet in compose? Zo is het geen instelling die de klant
+even aanpast. Voor **lokale ontwikkeling** kun je `LICENSE_ENFORCE=false` in je
+eigen `.env` zetten.
+
+> **Eerlijk over de grens:** bij broncode-distributie draait de code op de
+> hardware van de klant en is elke check technisch aan te passen. Ed25519-signing
+> voorkomt dat iemand een **geldige licentie namaakt** (geen privésleutel), maar
+> niet dat iemand de broncode patcht. De **licentieovereenkomst/EULA** is daarom
+> de uiteindelijke, juridisch afdwingbare bescherming; deze opzet maakt omzeilen
+> een bewuste inbreuk in plaats van één regel in een env-bestand. Wil je de
+> drempel verder verhogen, distribueer dan een **prebuilt image** in plaats van
+> broncode.
 
 ## Upgraden & intrekken (online)
 

@@ -24,6 +24,13 @@ Caddy → installer → werkend Kanban-platform.
   opslag (GB), feature-flags en verloop+respijt. Pakketten zijn vrij samen te
   stellen. `LICENSE_ENFORCE=false` draait onbeperkt.
 - Adminpagina in Board om een sleutel in te voeren en online te vernieuwen.
+- **Handhaving in de code i.p.v. env/compose:** publieke sleutel + `enforce`
+  staan als committed constanten in `config/license.php` (geen `LICENSE_*`-knop
+  meer in `docker-compose.yml`/`.env.example`), zodat het geen instelling is die
+  de klant even aanpast. Model is **altijd gelicentieerd**: zonder geldige
+  licentie draait Board in **geblokkeerde modus** (`EnsureLicensed` → beheerder
+  naar de licentiepagina, overige gebruikers naar een "licentie vereist"-scherm).
+  Signing voorkomt namaak; de EULA blijft de uiteindelijke bescherming.
 - **Licentiesleutel in de web-installer:** een optionele *Licentie*-stap in de
   installatiewizard (alleen bij een gelicentieerde build). De klant voert zijn
   sleutel dus in de UI in — niet in een env-bestand. Leeg laten = community-tier.

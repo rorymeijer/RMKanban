@@ -32,6 +32,7 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WorkspaceMemberController;
 use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\EnsureLicensed;
 use App\Http\Middleware\EnsureRegistrationOpen;
 use Illuminate\Support\Facades\Route;
 
@@ -83,9 +84,12 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 /*
- * Applicatie (vereist authenticatie).
+ * Applicatie (vereist authenticatie én een geldige licentie).
  */
-Route::middleware('auth')->group(function (): void {
+Route::middleware(['auth', EnsureLicensed::class])->group(function (): void {
+    // Blijft bereikbaar zonder licentie (zie EnsureLicensed-allowlist).
+    Route::get('/license-required', [LicenseController::class, 'required'])->name('license.required');
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Boards.

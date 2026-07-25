@@ -52,4 +52,16 @@ class LicenseController extends Controller
 
         return back()->with('status', 'Licentiestatus vernieuwd.');
     }
+
+    /**
+     * "Licentie vereist"-scherm voor niet-beheerders in de geblokkeerde modus.
+     */
+    public function required(): Response
+    {
+        $current = $this->license->current();
+
+        return Inertia::render('LicenseRequired', [
+            'expired' => ! $current->unlicensed && ! $current->isUsable(),
+        ]);
+    }
 }

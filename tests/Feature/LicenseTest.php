@@ -54,12 +54,12 @@ it('tekent en verifieert een token; knoeien maakt hem ongeldig', function (): vo
     expect(LicenseToken::verify($token, $other['public']))->toBeNull();
 });
 
-it('valt terug op de community-tier zonder licentie', function (): void {
+it('valt zonder licentie terug op de geblokkeerde/onvergunde staat', function (): void {
     $license = app(LicenseService::class)->current();
 
     expect($license->unlicensed)->toBeTrue();
     expect($license->hasFeature('automations'))->toBeFalse();
-    expect($license->limit('users'))->toBe(3);
+    expect($license->limit('users'))->toBe(1);
 });
 
 it('activeert een geldige licentie en ontgrendelt features', function (): void {
@@ -97,37 +97,44 @@ it('respecteert de respijtperiode en vervalt daarna', function (): void {
     expect($expired->isUsable())->toBeFalse();
 });
 
-it('blokkeert een feature-route zonder de juiste feature', function (): void {
+it('blokkeert de app zonder licentie en leidt de beheerder naar de licentiepagina', function (): void {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)->get('/')->assertRedirect(route('admin.license'));
+
+    // Met een geldige licentie werkt de app weer.
+    app(LicenseService::class)->activate(makeToken($this->keys));
+    $this->actingAs($admin)->get('/')->assertOk();
+});
+
+it('toont niet-beheerders een licentie-vereist-scherm zonder licentie', function (): void {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get('/')->assertRedirect(route('license.required'));
+    $this->actingAs($user)->get('/license-required')->assertOk();
+});
+
+it('blokkeert een feature-route zonder de juiste feature (met licentie)', function (): void {
     $owner = User::factory()->create();
     $workspace = Workspace::factory()->create(['owner_id' => $owner->id]);
     $workspace->members()->attach($owner->id, ['role' => Role::Owner->value]);
     $board = Board::factory()->create(['workspace_id' => $workspace->id, 'visibility' => 'workspace']);
 
-    // Community-tier heeft geen automations → 402.
+    // Geldige licentie zónder 'automations' → app werkt, maar feature is geblokkeerd (402).
+    app(LicenseService::class)->activate(makeToken($this->keys, ['features' => ['custom_fields']]));
     $this->actingAs($owner)
         ->post("/boards/{$board->id}/automations", [
             'name' => 'Test', 'trigger' => 'card_moved', 'actions' => [['type' => 'archive']],
         ])
         ->assertStatus(402);
 
-    // Met een Pro-licentie mag het wel.
-    app(LicenseService::class)->activate(makeToken($this->keys));
+    // Licentie mét 'automations' → mag.
+    app(LicenseService::class)->activate(makeToken($this->keys, ['features' => ['automations']]));
     $this->actingAs($owner)
         ->post("/boards/{$board->id}/automations", [
             'name' => 'Test', 'trigger' => 'card_moved', 'actions' => [['type' => 'archive']],
         ])
         ->assertRedirect();
-});
-
-it('dwingt de gebruikerslimiet af bij registratie', function (): void {
-    config(['board.registration_open' => true]);
-    // Community-tier: max 3 gebruikers. Maak er al 3.
-    User::factory()->count(3)->create();
-
-    $this->post('/register', [
-        'name' => 'Vierde', 'username' => 'vierde', 'email' => 'vierde@example.com',
-        'password' => 'Sterk-Wachtwoord-123!', 'password_confirmation' => 'Sterk-Wachtwoord-123!',
-    ])->assertStatus(402);
 });
 
 it('trekt een licentie in via de online refresh', function (): void {

@@ -9,7 +9,7 @@ export const nl: Record<string, string> = {
     'install.license.hint': 'Heb je een licentiesleutel ontvangen? Plak hem hieronder.',
     'install.license.key': 'Licentiesleutel',
     'install.license.placeholder': 'Plak hier je licentiesleutel…',
-    'install.license.skip_note': 'Geen sleutel? Laat leeg — je start dan met de gratis community-versie en kunt later een licentie invoeren onder Beheer → Licentie.',
+    'install.license.skip_note': 'Geen sleutel? Je kunt later een licentie invoeren onder Beheer → Licentie. Zonder geldige licentie blijft Board geblokkeerd.',
     'install.app.name': 'Weergavenaam',
     'install.app.locale': 'Standaardtaal',
     'install.app.timezone': 'Tijdzone',
