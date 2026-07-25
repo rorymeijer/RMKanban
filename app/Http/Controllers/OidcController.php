@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\License\LicenseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +74,15 @@ class OidcController extends Controller
     {
         $email = (string) ($claims['email'] ?? '');
         abort_if($email === '', 422, 'OIDC leverde geen e-mailadres.');
+
+        $existing = User::query()->where('email', $email)->first();
+        if ($existing === null) {
+            abort_unless(
+                app(LicenseService::class)->canAddUser(),
+                402,
+                'Het maximale aantal gebruikers voor je licentiepakket is bereikt.',
+            );
+        }
 
         return User::query()->firstOrCreate(
             ['email' => $email],

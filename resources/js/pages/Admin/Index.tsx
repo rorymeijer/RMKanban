@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { AppLayout } from '@/layouts/AppLayout';
 
 interface Stats {
@@ -22,7 +22,12 @@ export default function AdminIndex({ stats, recentUsers }: { stats: Stats; recen
         <AppLayout>
             <Head title="Beheer" />
             <div className="mx-auto max-w-5xl p-6">
-                <h1 className="mb-6 text-xl font-semibold">Beheer</h1>
+                <div className="mb-6 flex items-center justify-between">
+                    <h1 className="text-xl font-semibold">Beheer</h1>
+                    <Link href="/admin/license" className="text-sm text-primary hover:underline">
+                        Licentie beheren →
+                    </Link>
+                </div>
 
                 <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
                     <StatTile label="Gebruikers" value={stats.users} />

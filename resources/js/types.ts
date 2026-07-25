@@ -20,6 +20,10 @@ export interface SharedProps {
         status: string | null;
         mail_test: string | null;
     };
+    license: {
+        features: string[];
+        package: string;
+    };
     [key: string]: unknown;
 }
 

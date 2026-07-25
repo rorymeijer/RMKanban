@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Services\License\LicenseService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -43,6 +44,10 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'status' => fn () => $request->session()->get('status'),
                 'mail_test' => fn () => $request->session()->get('mail_test'),
+            ],
+            'license' => fn (): array => [
+                'features' => app(LicenseService::class)->current()->features,
+                'package' => app(LicenseService::class)->current()->package,
             ],
         ];
     }

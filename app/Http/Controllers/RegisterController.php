@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\Role;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Services\License\LicenseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,12 @@ class RegisterController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
+        abort_unless(
+            app(LicenseService::class)->canAddUser(),
+            402,
+            'Het maximale aantal gebruikers voor je licentiepakket is bereikt.',
+        );
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'username' => ['required', 'string', 'alpha_dash', 'min:3', 'max:40', 'unique:users,username'],

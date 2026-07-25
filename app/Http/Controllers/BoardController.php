@@ -10,6 +10,7 @@ use App\Models\Card;
 use App\Models\Label;
 use App\Models\Workspace;
 use App\Services\ActivityLogger;
+use App\Services\License\LicenseService;
 use App\Support\LexoRank;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,6 +25,12 @@ class BoardController extends Controller
     public function store(Request $request, Workspace $workspace): RedirectResponse
     {
         $this->authorize('createInWorkspace', [Board::class, $workspace]);
+
+        abort_unless(
+            app(LicenseService::class)->canAddBoard(),
+            402,
+            'Je licentiepakket staat geen extra boards toe.',
+        );
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],

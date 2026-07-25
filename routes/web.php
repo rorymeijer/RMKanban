@@ -19,6 +19,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\MyWorkController;
 use App\Http\Controllers\NotificationController;
@@ -70,9 +71,11 @@ Route::middleware('guest')->group(function (): void {
         Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
     });
 
-    // SSO via OIDC (optioneel, gated door OIDC_ENABLED).
-    Route::get('/oidc/redirect', [OidcController::class, 'redirect'])->name('oidc.redirect');
-    Route::get('/oidc/callback', [OidcController::class, 'callback'])->name('oidc.callback');
+    // SSO via OIDC (gated door OIDC_ENABLED én de licentie-feature "sso").
+    Route::middleware('feature:sso')->group(function (): void {
+        Route::get('/oidc/redirect', [OidcController::class, 'redirect'])->name('oidc.redirect');
+        Route::get('/oidc/callback', [OidcController::class, 'callback'])->name('oidc.callback');
+    });
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -143,10 +146,15 @@ Route::middleware('auth')->group(function (): void {
     Route::delete('/filters/{filter}', [SavedFilterController::class, 'destroy'])->name('filters.destroy');
 
     // Automations, webhooks, API-tokens, import/export (Fase 6).
-    Route::post('/boards/{board}/automations', [AutomationController::class, 'store'])->name('automations.store');
-    Route::post('/automations/{automation}/run', [AutomationController::class, 'run'])->name('automations.run');
-    Route::post('/boards/{board}/webhooks', [WebhookController::class, 'store'])->name('webhooks.store');
-    Route::delete('/boards/{board}/webhooks/{webhook}', [WebhookController::class, 'destroy'])->name('webhooks.destroy');
+    // Automations en webhooks zijn feature-flags in het licentiepakket.
+    Route::middleware('feature:automations')->group(function (): void {
+        Route::post('/boards/{board}/automations', [AutomationController::class, 'store'])->name('automations.store');
+        Route::post('/automations/{automation}/run', [AutomationController::class, 'run'])->name('automations.run');
+    });
+    Route::middleware('feature:webhooks')->group(function (): void {
+        Route::post('/boards/{board}/webhooks', [WebhookController::class, 'store'])->name('webhooks.store');
+        Route::delete('/boards/{board}/webhooks/{webhook}', [WebhookController::class, 'destroy'])->name('webhooks.destroy');
+    });
     Route::post('/user/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
     Route::delete('/user/api-tokens/{tokenId}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
     Route::get('/boards/{board}/export.json', [ExportController::class, 'json'])->name('boards.export.json');
@@ -176,5 +184,8 @@ Route::middleware('auth')->group(function (): void {
     // Adminpaneel.
     Route::middleware(EnsureAdmin::class)->group(function (): void {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admin/license', [LicenseController::class, 'show'])->name('admin.license');
+        Route::post('/admin/license', [LicenseController::class, 'activate'])->name('admin.license.activate');
+        Route::post('/admin/license/refresh', [LicenseController::class, 'refresh'])->name('admin.license.refresh');
     });
 });
