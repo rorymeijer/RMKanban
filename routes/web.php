@@ -19,8 +19,10 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\MyWorkController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OidcController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\SearchController;
@@ -40,6 +42,17 @@ Route::get('/install', [InstallController::class, 'show'])->name('install.show')
 Route::post('/install', [InstallController::class, 'store'])->name('install.store');
 Route::post('/install/test-mail', [InstallController::class, 'testMail'])->name('install.test-mail');
 
+// Prometheus-metrics (afschermbaar via METRICS_TOKEN).
+Route::get('/metrics', MetricsController::class)->name('metrics');
+
+// Offline-fallback voor de PWA (standalone, geen assets nodig).
+Route::get('/offline', fn () => response(
+    '<!doctype html><meta charset="utf-8"><title>Offline — Board</title>'
+    .'<style>body{font:16px/1.6 system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0;'
+    .'background:#0f1424;color:#e2e8f0}div{text-align:center}</style>'
+    .'<div><h1>Je bent offline</h1><p>Eerder bezochte boards zijn beschikbaar zodra je verbinding terug is.</p></div>'
+))->name('offline');
+
 /*
  * Authenticatie.
  */
@@ -56,6 +69,10 @@ Route::middleware('guest')->group(function (): void {
         Route::get('/register', [RegisterController::class, 'show'])->name('register');
         Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
     });
+
+    // SSO via OIDC (optioneel, gated door OIDC_ENABLED).
+    Route::get('/oidc/redirect', [OidcController::class, 'redirect'])->name('oidc.redirect');
+    Route::get('/oidc/callback', [OidcController::class, 'callback'])->name('oidc.callback');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])

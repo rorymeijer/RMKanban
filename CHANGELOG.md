@@ -6,7 +6,25 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 Bij elke release staan eventuele **handmatige stappen** vermeld die na
 `./update.sh` nodig zijn.
 
-## [Unreleased]
+## [1.0.0] - 2026-07-25
+
+Eerste complete release: Fase 0 t/m 7. `git clone` → `docker compose up -d` →
+Caddy → installer → werkend Kanban-platform.
+
+### Fase 7 — Productieklaar
+
+**Toegevoegd**
+
+- SSO via OIDC (authorization-code flow met discovery), optioneel naast
+  wachtwoordlogin en gated door `OIDC_ENABLED`.
+- Prometheus-metrics op `/metrics`, afschermbaar via `METRICS_TOKEN`.
+- PWA: installeerbaar (manifest + icoon), service worker met offline-lezen van
+  bezochte boards en een nette offline-pagina.
+- Playwright end-to-end test voor de kritieke flow (verse start → installer →
+  beheerder → board → kaart maken), plus een aparte CI-job.
+- Productie-, beveiligings- en performance-documentatie in `docs/productie.md`.
+
+**Handmatige stappen na update:** geen.
 
 ### Fase 6 — Automations & API
 

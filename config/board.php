@@ -44,4 +44,20 @@ return [
         'host' => env('REVERB_HOST', 'reverb'),
         'port' => (int) env('REVERB_PORT', 8080),
     ],
+
+    /*
+     * Token om de /metrics-endpoint af te schermen (leeg = open op intern netwerk).
+     */
+    'metrics_token' => env('METRICS_TOKEN', ''),
+
+    /*
+     * SSO via OIDC (optioneel naast wachtwoordlogin).
+     */
+    'oidc' => [
+        'enabled' => (bool) env('OIDC_ENABLED', false),
+        'client_id' => env('OIDC_CLIENT_ID'),
+        'client_secret' => env('OIDC_CLIENT_SECRET'),
+        'issuer' => env('OIDC_ISSUER'),
+        'scopes' => env('OIDC_SCOPES', 'openid profile email'),
+    ],
 ];

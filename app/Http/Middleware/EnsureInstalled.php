@@ -25,6 +25,8 @@ class EnsureInstalled
         'install',
         'install/*',
         'api/health',
+        'metrics',
+        'offline',
         'up',
     ];
 

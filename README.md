@@ -123,6 +123,7 @@ Uitgebreide handleidingen staan in [`docs/`](docs/):
 - [Installatie](docs/installatie.md)
 - [Bijwerken](docs/bijwerken.md)
 - [Back-up & herstel](docs/backup.md)
+- [Productie: beveiliging, monitoring & performance](docs/productie.md)
 
 ## Fasering
 
