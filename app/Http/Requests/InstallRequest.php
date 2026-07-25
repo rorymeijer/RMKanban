@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Services\License\LicenseToken;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -35,6 +37,31 @@ class InstallRequest extends FormRequest
                 // Geen uncompromised()-check: privacy-by-default, niets verlaat de server.
                 Password::min(12)->mixedCase()->numbers()->symbols(),
             ],
+
+            // Optionele licentiesleutel: als hij is ingevuld, moet hij geldig
+            // ondertekend zijn door de licentieserver (offline geverifieerd).
+            'license_key' => ['nullable', 'string', $this->licenseKeyRule()],
         ];
+    }
+
+    private function licenseKeyRule(): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail): void {
+            if (! is_string($value) || trim($value) === '') {
+                return;
+            }
+
+            $publicKey = (string) config('license.public_key');
+            if ($publicKey === '') {
+                $fail('Licentieverificatie is niet geconfigureerd op deze installatie.');
+
+                return;
+            }
+
+            $payload = LicenseToken::verify(trim($value), $publicKey);
+            if ($payload === null || ($payload['product'] ?? null) !== config('license.product')) {
+                $fail('De licentiesleutel is ongeldig of niet voor dit product.');
+            }
+        };
     }
 }

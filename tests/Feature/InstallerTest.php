@@ -6,6 +6,8 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Services\InstallService;
+use App\Services\License\LicenseService;
+use App\Services\License\LicenseToken;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia;
 
@@ -111,4 +113,46 @@ it('gooit een fout als InstallService twee keer draait', function (): void {
     ])))->toThrow(RuntimeException::class);
 
     expect(User::count())->toBe(1);
+});
+
+it('toont de licentiestap alleen bij een gelicentieerde build', function (): void {
+    config(['license.public_key' => '', 'license.enforce' => false]);
+    $this->get('/install')->assertInertia(fn (AssertableInertia $p) => $p->where('licensing', false));
+
+    $keys = LicenseToken::generateKeypair();
+    config(['license.public_key' => $keys['public'], 'license.enforce' => true]);
+    $this->get('/install')->assertInertia(fn (AssertableInertia $p) => $p->where('licensing', true));
+});
+
+it('activeert een licentiesleutel tijdens de installatie', function (): void {
+    $keys = LicenseToken::generateKeypair();
+    config([
+        'license.enforce' => true,
+        'license.public_key' => $keys['public'],
+    ]);
+
+    $token = LicenseToken::sign([
+        'id' => 'lic_install', 'product' => 'board', 'package' => 'Pro',
+        'limits' => ['users' => null], 'features' => ['automations'],
+        'issued_at' => '2026-01-01T00:00:00+00:00', 'expires_at' => null, 'grace_days' => 14,
+    ], $keys['private']);
+
+    $this->post('/install', validInstallPayload(['license_key' => $token]))
+        ->assertRedirect(route('dashboard'));
+
+    $current = app(LicenseService::class)->current();
+    expect($current->package)->toBe('Pro');
+    expect($current->unlicensed)->toBeFalse();
+    expect($current->hasFeature('automations'))->toBeTrue();
+});
+
+it('weigert een ongeldige licentiesleutel in de installer', function (): void {
+    $keys = LicenseToken::generateKeypair();
+    config(['license.enforce' => true, 'license.public_key' => $keys['public']]);
+
+    $this->post('/install', validInstallPayload(['license_key' => 'dit.is.geen.geldige.sleutel']))
+        ->assertSessionHasErrors('license_key');
+
+    expect(User::count())->toBe(0);
+    expect(Setting::isInstalled())->toBeFalse();
 });

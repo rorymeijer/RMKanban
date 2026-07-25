@@ -9,11 +9,19 @@ op upgrades en intrekking gecontroleerd.
 
 1. Je draait de licentieserver (`license-server/`) en genereert een sleutelpaar
    (gebeurt automatisch bij de eerste start).
-2. Je zet de **publieke sleutel** in Board (`LICENSE_PUBLIC_KEY`) en optioneel de
-   server-URL (`LICENSE_SERVER_URL`).
+2. Als **leverancier** bak je de **publieke sleutel** in Board in via
+   `LICENSE_PUBLIC_KEY` (en zet je `LICENSE_ENFORCE=true` + optioneel
+   `LICENSE_SERVER_URL`). Dit is geen geheim en is voor al je klanten hetzelfde.
 3. In de licentieserver maak je **pakketten** aan en geef je **licenties** uit.
-4. De klant plakt de licentiesleutel in Board onder **Beheer → Licentie**.
-5. Board verifieert de sleutel lokaal en dwingt de limieten en features af.
+4. De klant voert zijn **licentiesleutel** in tijdens de **installatie**
+   (stap *Licentie*) — of later onder **Beheer → Licentie**. De sleutel komt dus
+   nooit in een env-bestand.
+5. Board verifieert de sleutel lokaal (offline) en dwingt de limieten en
+   features af.
+
+> De klant configureert alles in de web-installer op `domein.ext/install`,
+> inclusief de licentiesleutel. Alleen de publieke verificatiesleutel is een
+> vaste productconstante die jij als leverancier meelevert.
 
 ## Wat een pakket afdwingt
 

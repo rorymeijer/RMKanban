@@ -57,6 +57,12 @@ x-app-env: &app-env
   MAX_UPLOAD_SIZE: ${MAX_UPLOAD_SIZE:-25}
   AUDIT_RETENTION_DAYS: ${AUDIT_RETENTION_DAYS:-365}
 
+  # Licentie. De leverancier zet LICENSE_ENFORCE=true en de publieke sleutel van
+  # de licentieserver; de klant voert zijn licentiesleutel in de installer in.
+  LICENSE_ENFORCE: ${LICENSE_ENFORCE:-false}
+  LICENSE_PUBLIC_KEY: ${LICENSE_PUBLIC_KEY:-}
+  LICENSE_SERVER_URL: ${LICENSE_SERVER_URL:-}
+
   # SMTP (optioneel; ook in te vullen in de installer of het adminpaneel).
   MAIL_MAILER: ${MAIL_MAILER:-log}
   MAIL_HOST: ${MAIL_HOST:-}

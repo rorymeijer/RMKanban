@@ -24,6 +24,10 @@ Caddy → installer → werkend Kanban-platform.
   opslag (GB), feature-flags en verloop+respijt. Pakketten zijn vrij samen te
   stellen. `LICENSE_ENFORCE=false` draait onbeperkt.
 - Adminpagina in Board om een sleutel in te voeren en online te vernieuwen.
+- **Licentiesleutel in de web-installer:** een optionele *Licentie*-stap in de
+  installatiewizard (alleen bij een gelicentieerde build). De klant voert zijn
+  sleutel dus in de UI in — niet in een env-bestand. Leeg laten = community-tier.
+  Alleen de publieke verificatiesleutel blijft een vaste productconstante.
 
 ### Fase 7 — Productieklaar
 

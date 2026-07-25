@@ -14,14 +14,16 @@ interface Props {
     timezones: string[];
     defaultTimezone: string;
     version: string;
+    licensing: boolean;
 }
 
-type StepKey = 'app' | 'admin' | 'smtp';
-const STEPS: StepKey[] = ['app', 'admin', 'smtp'];
+type StepKey = 'app' | 'admin' | 'license' | 'smtp';
 
-export default function Wizard({ locales, defaultLocale, timezones, defaultTimezone, version }: Props) {
+export default function Wizard({ locales, defaultLocale, timezones, defaultTimezone, version, licensing }: Props) {
     const { t } = useTranslation();
     const [step, setStep] = useState(0);
+
+    const STEPS: StepKey[] = ['app', 'admin', ...(licensing ? (['license'] as StepKey[]) : []), 'smtp'];
 
     const form = useForm({
         app_name: 'Board',
@@ -32,6 +34,7 @@ export default function Wizard({ locales, defaultLocale, timezones, defaultTimez
         admin_email: '',
         admin_password: '',
         admin_password_confirmation: '',
+        license_key: '',
     });
 
     const stepKey = STEPS[step];
@@ -174,6 +177,22 @@ export default function Wizard({ locales, defaultLocale, timezones, defaultTimez
                                             }
                                         />
                                     </Field>
+                                </div>
+                            )}
+
+                            {stepKey === 'license' && (
+                                <div className="space-y-4">
+                                    <p className="text-sm text-muted-foreground">{t('install.license.hint')}</p>
+                                    <Field label={t('install.license.key')} error={form.errors.license_key}>
+                                        <textarea
+                                            value={form.data.license_key}
+                                            onChange={(e) => form.setData('license_key', e.target.value)}
+                                            rows={4}
+                                            placeholder={t('install.license.placeholder')}
+                                            className="w-full rounded-md border border-input bg-transparent p-2 font-mono text-xs"
+                                        />
+                                    </Field>
+                                    <p className="text-xs text-muted-foreground">{t('install.license.skip_note')}</p>
                                 </div>
                             )}
 

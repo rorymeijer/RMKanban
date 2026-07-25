@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Services\License\LicenseService;
 use Database\Seeders\DemoBoardSeeder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,8 @@ use RuntimeException;
  */
 class InstallService
 {
+    public function __construct(private readonly LicenseService $license) {}
+
     /**
      * @param  array{
      *     app_name: string,
@@ -29,7 +32,8 @@ class InstallService
      *     admin_name: string,
      *     admin_username: string,
      *     admin_email: string,
-     *     admin_password: string
+     *     admin_password: string,
+     *     license_key?: string|null
      * }  $data
      */
     public function install(array $data): User
@@ -56,7 +60,7 @@ class InstallService
                 throw new RuntimeException('De applicatie is al geïnstalleerd.');
             }
 
-            return DB::transaction(function () use ($data): User {
+            $admin = DB::transaction(function () use ($data): User {
                 $admin = User::create([
                     'name' => $data['admin_name'],
                     'username' => $data['admin_username'],
@@ -92,6 +96,16 @@ class InstallService
 
                 return $admin;
             });
+
+            // Optioneel: activeer de meegegeven licentiesleutel (al gevalideerd
+            // in het formulier). Bij een probleem blijft de installatie staan en
+            // valt de app terug op de community-tier.
+            $key = $data['license_key'] ?? null;
+            if (is_string($key) && trim($key) !== '') {
+                $this->license->activate(trim($key));
+            }
+
+            return $admin;
         } finally {
             $lock->release();
         }

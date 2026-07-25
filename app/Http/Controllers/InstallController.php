@@ -27,6 +27,9 @@ class InstallController extends Controller
             'timezones' => \DateTimeZone::listIdentifiers(),
             'defaultTimezone' => 'Europe/Amsterdam',
             'version' => config('board.version'),
+            // Toon de licentiestap alleen als deze build een publieke sleutel kent
+            // (d.w.z. commercieel gelicentieerd) én handhaving aan staat.
+            'licensing' => (string) config('license.public_key') !== '' && (bool) config('license.enforce'),
         ]);
     }
 
@@ -38,7 +41,8 @@ class InstallController extends Controller
         /** @var array{
          *     app_name: string, locale: string, timezone: string,
          *     admin_name: string, admin_username: string,
-         *     admin_email: string, admin_password: string
+         *     admin_email: string, admin_password: string,
+         *     license_key?: string|null
          * } $data */
         $data = $request->validated();
 

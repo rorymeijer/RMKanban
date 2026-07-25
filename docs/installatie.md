@@ -43,7 +43,10 @@ het achter je bestaande Caddy.
    1. **Toepassing** — weergavenaam, standaardtaal, tijdzone.
    2. **Beheerder** — naam, gebruikersnaam, e-mail, wachtwoord (min. 12 tekens,
       hoofd-/kleine letters, cijfers en symbolen).
-   3. **E-mail** (optioneel) — SMTP kan ook later in het adminpaneel.
+   3. **Licentie** (alleen bij een gelicentieerde build) — plak hier je
+      licentiesleutel. Laat leeg om met de gratis community-versie te starten;
+      je kunt later alsnog een licentie invoeren onder *Beheer → Licentie*.
+   4. **E-mail** (optioneel) — SMTP kan ook later in het adminpaneel.
 
    Er worden **nooit** database- of Redis-gegevens gevraagd; die zijn al klaar.
 
