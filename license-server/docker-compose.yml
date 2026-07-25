@@ -1,0 +1,77 @@
+# Board License-server — losse admin-app om pakketten en licenties te beheren.
+#
+#   docker compose up -d   → open http://localhost:8090/admin
+#
+# Zet ADMIN_PASSWORD in .env. Het Ed25519-sleutelpaar wordt bij de eerste start
+# automatisch gegenereerd; de publieke sleutel vind je in het adminpaneel.
+
+x-app-env: &app-env
+  APP_NAME: "Board Licenties"
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_KEY: ""
+  APP_URL: ${APP_URL:-http://localhost:8090}
+  DB_CONNECTION: pgsql
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_DATABASE: license
+  DB_USERNAME: license
+  DB_PASSWORD: license_internal_secret
+  SESSION_DRIVER: database
+  CACHE_STORE: database
+  QUEUE_CONNECTION: sync
+  # Genereert bij eerste start; laat leeg.
+  LICENSE_PRIVATE_KEY: ""
+  LICENSE_PUBLIC_KEY: ""
+  # Basic-auth voor het adminpaneel — ZELF ZETTEN.
+  ADMIN_USER: ${ADMIN_USER:-admin}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:-verander-mij}
+  TRUSTED_PROXIES: "*"
+
+services:
+  app:
+    build: { context: ., dockerfile: Dockerfile }
+    image: board-license-app
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+      CONTAINER_ROLE: app
+    volumes:
+      - app_storage:/var/www/html/storage/app
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [license]
+
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on: [app]
+    ports:
+      - "${ADMIN_PORT:-8090}:8080"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [license]
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: license
+      POSTGRES_USER: license
+      POSTGRES_PASSWORD: license_internal_secret
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks: [license]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U license -d license"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  pg_data:
+  app_storage:
+
+networks:
+  license:
+    driver: bridge

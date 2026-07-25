@@ -11,6 +11,20 @@ Bij elke release staan eventuele **handmatige stappen** vermeld die na
 Eerste complete release: Fase 0 t/m 7. `git clone` → `docker compose up -d` →
 Caddy → installer → werkend Kanban-platform.
 
+### Licenties (los, gedockeriseerd systeem)
+
+**Toegevoegd**
+
+- Aparte licentieserver in [`license-server/`](license-server) (Laravel, Docker):
+  pakketten en licenties aanmaken, uitgeven, upgraden en intrekken via een
+  adminpaneel + status-API.
+- Ed25519-getekende licentiesleutels die Board **offline** verifieert; online
+  refresh voor upgrades/intrekking met respijtperiode.
+- Handhaving in Board van numerieke limieten (gebruikers/workspaces/boards),
+  opslag (GB), feature-flags en verloop+respijt. Pakketten zijn vrij samen te
+  stellen. `LICENSE_ENFORCE=false` draait onbeperkt.
+- Adminpagina in Board om een sleutel in te voeren en online te vernieuwen.
+
 ### Fase 7 — Productieklaar
 
 **Toegevoegd**

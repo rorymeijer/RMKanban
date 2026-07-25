@@ -29,3 +29,11 @@ Thumbs.db
 /database/database.sqlite
 /storage/app/installed.lock
 /storage/app/private/board-secrets.env
+
+# License-server (nested Laravel app) build artifacts
+/license-server/vendor
+/license-server/node_modules
+/license-server/.env
+/license-server/storage/*.key
+/license-server/database/database.sqlite
+/license-server/bootstrap/cache/*.php

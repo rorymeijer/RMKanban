@@ -124,6 +124,7 @@ Uitgebreide handleidingen staan in [`docs/`](docs/):
 - [Bijwerken](docs/bijwerken.md)
 - [Back-up & herstel](docs/backup.md)
 - [Productie: beveiliging, monitoring & performance](docs/productie.md)
+- [Licenties (los systeem in `license-server/`)](docs/licenties.md)
 
 ## Fasering
 
