@@ -8,6 +8,14 @@ geen tracking, geen CDN's.
 > wijzen → domein openen → web-installer verschijnt → alleen een beheerdersaccount
 > invullen → klaar. De database is standaard al geconfigureerd en raak je nooit aan.
 
+## Screenshots
+
+| Bord (licht) | Bord (donker) |
+|---|---|
+| ![Bordweergave, licht thema](docs/screenshots/board-light.png) | ![Bordweergave, donker thema](docs/screenshots/board-dark.png) |
+
+De weergavenaam (hier `rmboard`) volgt automatisch uit `APP_NAME`.
+
 ## Snel starten
 
 ```bash

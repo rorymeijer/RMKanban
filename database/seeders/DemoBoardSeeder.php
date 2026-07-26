@@ -20,10 +20,12 @@ class DemoBoardSeeder
 {
     public function seed(Workspace $workspace, User $owner): Board
     {
+        $boardName = 'Welkom bij '.$workspace->name;
+
         $board = Board::create([
             'workspace_id' => $workspace->id,
-            'name' => 'Welkom bij Board',
-            'slug' => Str::slug('Welkom bij Board'),
+            'name' => $boardName,
+            'slug' => Str::slug($boardName),
             'description' => 'Een voorbeeldbord om mee te starten. Sleep kaarten, '
                 .'maak lijsten en pas alles naar wens aan.',
             'color' => '#6366f1',

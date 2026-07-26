@@ -11,16 +11,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
     const { t } = useTranslation();
     const { props } = usePage<SharedProps>();
     const user = props.auth.user;
+    const appName = props.app.name;
 
     return (
         <div className="flex min-h-full flex-col">
             <CommandPalette />
             <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur">
                 <Link href="/" className="flex items-center gap-2 font-semibold">
-                    <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">
-                        B
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold uppercase">
+                        {appName.charAt(0)}
                     </span>
-                    Board
+                    {appName}
                 </Link>
                 <div className="flex items-center gap-1">
                     <ThemeToggle />
@@ -45,7 +46,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <main className="flex-1">{children}</main>
 
             <footer className="border-t px-4 py-3 text-center text-xs text-muted-foreground">
-                Board {props.app.version}
+                {appName} {props.app.version}
             </footer>
         </div>
     );
