@@ -34,7 +34,7 @@ Plak dit in je bestaande Caddyfile. Reverb-websockets lopen via hetzelfde domein
 
 ```caddy
 board.voorbeeld.nl {
-    reverse_proxy localhost:8080
+    reverse_proxy rmboard:8080
 }
 ```
 
@@ -48,8 +48,8 @@ board.voorbeeld.nl {
         header Connection *Upgrade*
         header Upgrade    websocket
     }
-    reverse_proxy @ws  localhost:8080
-    reverse_proxy      localhost:8080
+    reverse_proxy @ws  rmboard:8080
+    reverse_proxy      rmboard:8080
 }
 ```
 

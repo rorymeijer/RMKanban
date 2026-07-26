@@ -31,7 +31,7 @@ het achter je bestaande Caddy.
 
    ```caddy
    board.voorbeeld.nl {
-       reverse_proxy localhost:8080
+       reverse_proxy rmboard:8080
    }
    ```
 
