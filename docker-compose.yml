@@ -1,4 +1,4 @@
-# Board — self-hosted Kanban.
+# rmboard — self-hosted Kanban.
 #
 #   git clone → docker compose up -d → wijs je Caddy naar :8080 → open het domein
 #
