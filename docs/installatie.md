@@ -36,13 +36,20 @@ het achter je bestaande Caddy.
    }
    ```
 
-   **Caddy in Docker** — start de stack met het override-bestand zodat de app
-   op het netwerk van je Caddy komt onder de naam `rmboard`:
+   **Caddy in Docker** — laat de app meedraaien op het netwerk van je Caddy,
+   zodat die bereikbaar is onder de naam `rmboard`. Zet twee regels in `.env`
+   en start dan gewoon met `docker compose up -d`:
 
    ```bash
-   echo "CADDY_NETWORK=caddy" >> .env   # naam van jouw Caddy-netwerk
-   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+   cat >> .env <<'EOF'
+   CADDY_NETWORK=caddy
+   COMPOSE_FILE=docker-compose.yml:docker-compose.caddy.yml
+   EOF
+   docker compose up -d
    ```
+
+   (Zonder de `COMPOSE_FILE`-regel kan het ook expliciet met
+   `docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d`.)
 
    ```caddy
    board.voorbeeld.nl {

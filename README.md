@@ -45,16 +45,23 @@ board.voorbeeld.nl {
 
 ### 2. Caddy draait zelf in Docker
 
-Draait je Caddy in een container, start de stack dan met het meegeleverde
-override-bestand. De app komt dan mee op het netwerk van je Caddy en is daar
-bereikbaar onder de naam **`rmboard`** — geen host-poort nodig:
+Draait je Caddy in een container, dan komt de app mee op het netwerk van je
+Caddy en is daar bereikbaar onder de naam **`rmboard`** — geen host-poort nodig.
+Zet twee regels in je `.env` en start dan gewoon met `docker compose up -d`:
 
 ```bash
-# Naam van het netwerk waar jouw Caddy in zit (standaard: caddy):
-echo "CADDY_NETWORK=caddy" >> .env
+cat >> .env <<'EOF'
+# Naam van het netwerk waar jouw Caddy in zit:
+CADDY_NETWORK=caddy
+# Neem het Caddy-override-bestand automatisch mee:
+COMPOSE_FILE=docker-compose.yml:docker-compose.caddy.yml
+EOF
 
-docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+docker compose up -d
 ```
+
+> Liever expliciet dan via `COMPOSE_FILE`? Dan kan het ook zonder die regel met
+> `docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d`.
 
 En in je Caddyfile:
 
