@@ -52,7 +52,7 @@ class InstallController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('dashboard')
-            ->with('status', 'Welkom bij Board! Je installatie is klaar.');
+            ->with('status', 'Welkom bij rmboard! Je installatie is klaar.');
     }
 
     /**

@@ -1,6 +1,6 @@
 # Bijwerken
 
-Board werk je bij vanaf de terminal:
+rmboard werk je bij vanaf de terminal:
 
 ```bash
 git pull

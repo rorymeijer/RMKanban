@@ -1,6 +1,6 @@
 # Installatie
 
-Board draait volledig in Docker en brengt geen reverse proxy of TLS mee. Je zet
+rmboard draait volledig in Docker en brengt geen reverse proxy of TLS mee. Je zet
 het achter je bestaande Caddy.
 
 ## Vereisten

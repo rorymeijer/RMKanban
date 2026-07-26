@@ -1,6 +1,6 @@
 {
-    "name": "Board",
-    "short_name": "Board",
+    "name": "rmboard",
+    "short_name": "rmboard",
     "description": "Self-hosted Kanban- en werkbeheerplatform",
     "start_url": "/",
     "scope": "/",

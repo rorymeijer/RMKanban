@@ -28,7 +28,7 @@ export default function Wizard({ locales, defaultLocale, timezones, defaultTimez
     const STEPS: StepKey[] = ['app', 'admin', ...(licensing ? (['license'] as StepKey[]) : []), 'smtp'];
 
     const form = useForm({
-        app_name: 'Board',
+        app_name: 'rmboard',
         locale: defaultLocale,
         timezone: defaultTimezone,
         admin_name: '',

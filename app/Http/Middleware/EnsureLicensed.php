@@ -53,7 +53,7 @@ class EnsureLicensed
         $user = $request->user();
         if ($user !== null && $user->is_admin) {
             return redirect()->route('admin.license')
-                ->with('status', 'Voer een geldige licentiesleutel in om Board te activeren.');
+                ->with('status', 'Voer een geldige licentiesleutel in om rmboard te activeren.');
         }
 
         return redirect()->route('license.required');

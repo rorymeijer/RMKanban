@@ -1,8 +1,8 @@
 # Licenties
 
-Board kan commercieel gelicentieerd worden met een aparte, gedockeriseerde
+rmboard kan commercieel gelicentieerd worden met een aparte, gedockeriseerde
 **licentieserver** (map [`license-server/`](../license-server)). Licenties zijn
-Ed25519-getekend, zodat Board ze **offline** verifieert; online wordt periodiek
+Ed25519-getekend, zodat rmboard ze **offline** verifieert; online wordt periodiek
 op upgrades en intrekking gecontroleerd.
 
 ## Hoe het werkt
@@ -17,7 +17,7 @@ op upgrades en intrekking gecontroleerd.
 4. De klant voert zijn **licentiesleutel** in tijdens de **installatie**
    (stap *Licentie*) — of later onder **Beheer → Licentie**. De sleutel komt dus
    nooit in een env-bestand.
-5. Board verifieert de sleutel lokaal (offline) en dwingt de limieten en
+5. rmboard verifieert de sleutel lokaal (offline) en dwingt de limieten en
    features af.
 
 > De klant configureert alles in de web-installer op `domein.ext/install`,
@@ -35,7 +35,7 @@ op upgrades en intrekking gecontroleerd.
 
 ## Model: altijd gelicentieerd
 
-Board is standaard **altijd gelicentieerd** en handhaving zit **in de code**
+rmboard is standaard **altijd gelicentieerd** en handhaving zit **in de code**
 (`config/license.php`), bewust niet als env-/compose-knop:
 
 - **Geldige licentie** → de limieten/features van het pakket.
@@ -59,12 +59,12 @@ eigen `.env` zetten.
 ## Upgraden & intrekken (online)
 
 - **Upgrade:** wijzig het pakket van een licentie in de licentieserver. De sleutel
-  wordt opnieuw getekend; Board pikt hem op via `php artisan license:refresh`
+  wordt opnieuw getekend; rmboard pikt hem op via `php artisan license:refresh`
   (dagelijks gepland) of de knop *Online vernieuwen* in het adminpaneel.
-- **Intrekken:** zet de licentie op `revoked`. Board valt bij de eerstvolgende
+- **Intrekken:** zet de licentie op `revoked`. rmboard valt bij de eerstvolgende
   refresh terug op de community-tier.
 
-## Handhavingspunten in Board
+## Handhavingspunten in rmboard
 
 - Gebruikerslimiet: bij registratie en SSO-login.
 - Board-limiet: bij het aanmaken van een board.
