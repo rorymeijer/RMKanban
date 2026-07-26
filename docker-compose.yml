@@ -6,7 +6,7 @@
 # postgres en valkey zijn NIET naar de host gemapt (alleen intern netwerk).
 
 x-app-env: &app-env
-  APP_NAME: Board
+  APP_NAME: rmboard
   APP_ENV: production
   APP_DEBUG: "false"
   # APP_KEY / APP_SECRET blijven leeg: het entrypoint genereert ze eenmalig.
