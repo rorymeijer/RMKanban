@@ -14,60 +14,63 @@ geen tracking, geen CDN's.
 git clone <deze-repo> rmboard
 cd rmboard
 
-# Zet je domein (het enige dat je in principe hoeft in te stellen):
-echo "APP_URL=https://board.voorbeeld.nl" > .env   # of pas .env.example aan
+cp .env.example .env
+# Zet in .env je domein (APP_URL) en, als je Caddy in Docker draait, de naam
+# van je Caddy-netwerk (CADDY_NETWORK). Meer hoef je in principe niet te doen.
 
 docker compose up -d
 ```
 
-Wijs vervolgens je bestaande Caddy naar de app (zie hieronder) en open je domein.
-De **web-installer** verschijnt automatisch: vul een beheerdersaccount in en je hebt
-meteen een werkend board met een demo-inhoud.
-
-De applicatie luistert op één platte HTTP-poort (standaard **8080**). Ze brengt
-**geen** reverse proxy of TLS mee — dat regel je in je bestaande Caddy.
-
-## Caddy-snippet
-
-Er zijn twee opstellingen. Reverb-websockets lopen via hetzelfde domein (pad
-`/app` en `/apps`), dus je hoeft in beide gevallen geen tweede poort open te zetten.
-
-### 1. Caddy draait op de host
-
-Draait je Caddy direct op de host (buiten Docker), dan bereik je de app via de
-gepubliceerde poort. Plak dit in je Caddyfile:
-
-```caddy
-board.voorbeeld.nl {
-    reverse_proxy localhost:8080
-}
-```
-
-### 2. Caddy draait zelf in Docker
-
-Draait je Caddy in een container, dan komt de app mee op het netwerk van je
-Caddy en is daar bereikbaar onder de naam **`rmboard`** — geen host-poort nodig.
-Zet twee regels in je `.env` en start dan gewoon met `docker compose up -d`:
-
-```bash
-cat >> .env <<'EOF'
-# Naam van het netwerk waar jouw Caddy in zit:
-CADDY_NETWORK=caddy
-# Neem het Caddy-override-bestand automatisch mee:
-COMPOSE_FILE=docker-compose.yml:docker-compose.caddy.yml
-EOF
-
-docker compose up -d
-```
-
-> Liever expliciet dan via `COMPOSE_FILE`? Dan kan het ook zonder die regel met
-> `docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d`.
-
-En in je Caddyfile:
+`.env.example` is standaard ingesteld op een **Caddy die zelf in Docker draait**:
+de stack koppelt zich automatisch aan je Caddy-netwerk en is daar bereikbaar
+onder de naam **`rmboard`**. Voeg in je Caddyfile alleen nog toe:
 
 ```caddy
 board.voorbeeld.nl {
     reverse_proxy rmboard:8080
+}
+```
+
+Open daarna je domein. De **web-installer** verschijnt automatisch: vul een
+beheerdersaccount in en je hebt meteen een werkend board met demo-inhoud.
+
+De applicatie luistert op één platte HTTP-poort (standaard **8080**). Ze brengt
+**geen** reverse proxy of TLS mee — dat regel je in je Caddy. Draait je Caddy
+op de host in plaats van in Docker? Zie [scenario 1](#1-caddy-draait-op-de-host).
+
+## Caddy-snippet
+
+Reverb-websockets lopen via hetzelfde domein (pad `/app` en `/apps`), dus je
+hoeft in beide gevallen geen tweede poort open te zetten.
+
+### 1. Caddy draait zelf in Docker (standaard)
+
+Dit is de standaardopstelling in `.env.example`. De stack koppelt zich
+automatisch aan het netwerk van je Caddy (`CADDY_NETWORK`, standaard `caddy`)
+en is daar bereikbaar onder de naam **`rmboard`** — geen host-poort nodig. Je
+hoeft alleen de netwerknaam te kloppen te maken in `.env`:
+
+```dotenv
+CADDY_NETWORK=caddy      # naam van jouw bestaande Caddy-netwerk (docker network ls)
+COMPOSE_FILE=docker-compose.yml:docker-compose.caddy.yml
+```
+
+Daarna volstaat `docker compose up -d`. In je Caddyfile:
+
+```caddy
+board.voorbeeld.nl {
+    reverse_proxy rmboard:8080
+}
+```
+
+### 2. Caddy draait op de host
+
+Draait je Caddy direct op de host (buiten Docker)? Zet dan `CADDY_NETWORK` en
+`COMPOSE_FILE` in `.env` in commentaar en verwijs naar de gepubliceerde poort:
+
+```caddy
+board.voorbeeld.nl {
+    reverse_proxy localhost:8080
 }
 ```
 

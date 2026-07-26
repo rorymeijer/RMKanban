@@ -14,42 +14,24 @@ het achter je bestaande Caddy.
 1. **Clonen en opstarten**
 
    ```bash
-   git clone <deze-repo> board
-   cd board
-   echo "APP_URL=https://board.voorbeeld.nl" > .env
+   git clone <deze-repo> rmboard
+   cd rmboard
+   cp .env.example .env
+   # Zet in .env: APP_URL (je domein) en CADDY_NETWORK (je Caddy-netwerk).
    docker compose up -d
    ```
 
-   Bij de eerste start gebeurt automatisch:
+   `.env.example` is standaard ingesteld op een Caddy die zelf in Docker draait
+   (zie stap 2). Bij de eerste start gebeurt automatisch:
    - `APP_KEY` en `APP_SECRET` worden gegenereerd en op het storage-volume bewaard;
    - de app wacht tot PostgreSQL klaar is;
    - `php artisan migrate --force` draait de migraties.
 
 2. **Caddy laten wijzen naar de app**
 
-   **Caddy op de host** (buiten Docker) — de app is bereikbaar op de
-   gepubliceerde poort:
-
-   ```caddy
-   board.voorbeeld.nl {
-       reverse_proxy localhost:8080
-   }
-   ```
-
-   **Caddy in Docker** — laat de app meedraaien op het netwerk van je Caddy,
-   zodat die bereikbaar is onder de naam `rmboard`. Zet twee regels in `.env`
-   en start dan gewoon met `docker compose up -d`:
-
-   ```bash
-   cat >> .env <<'EOF'
-   CADDY_NETWORK=caddy
-   COMPOSE_FILE=docker-compose.yml:docker-compose.caddy.yml
-   EOF
-   docker compose up -d
-   ```
-
-   (Zonder de `COMPOSE_FILE`-regel kan het ook expliciet met
-   `docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d`.)
+   **Caddy in Docker (standaard).** `.env.example` schakelt dit al in via
+   `CADDY_NETWORK` en `COMPOSE_FILE`. De app draait mee op het netwerk van je
+   Caddy en is daar bereikbaar onder de naam `rmboard`. Voeg toe aan je Caddyfile:
 
    ```caddy
    board.voorbeeld.nl {
@@ -58,6 +40,9 @@ het achter je bestaande Caddy.
    ```
 
    Herlaad Caddy (`caddy reload` of `systemctl reload caddy`).
+
+   **Caddy op de host?** Zet dan `CADDY_NETWORK` en `COMPOSE_FILE` in `.env` in
+   commentaar en gebruik `reverse_proxy localhost:8080`.
 
 3. **Installer doorlopen**
 
