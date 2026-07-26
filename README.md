@@ -1,6 +1,6 @@
-# Board
+# rmboard
 
-**Board** is een self-hosted, modern Kanban- en werkbeheerplatform — een privacy-vriendelijk
+**rmboard** is een self-hosted, modern Kanban- en werkbeheerplatform — een privacy-vriendelijk
 alternatief voor Trello/Linear dat volledig op je eigen server draait. Geen externe SaaS,
 geen tracking, geen CDN's.
 
@@ -11,8 +11,8 @@ geen tracking, geen CDN's.
 ## Snel starten
 
 ```bash
-git clone <deze-repo> board
-cd board
+git clone <deze-repo> rmboard
+cd rmboard
 
 # Zet je domein (het enige dat je in principe hoeft in te stellen):
 echo "APP_URL=https://board.voorbeeld.nl" > .env   # of pas .env.example aan
@@ -75,6 +75,7 @@ Alles is instelbaar via omgevingsvariabelen (zie [`.env.example`](.env.example))
 In de standaardopstelling geeft `docker-compose.yml` de juiste waarden al mee.
 In de praktijk hoef je alleen `APP_URL` te zetten; optioneel SMTP en OIDC.
 
+- **Naam** van je board (browsertitel + in de app) via `APP_NAME` (standaard `rmboard`).
 - **Geheimen** (`APP_KEY`, `APP_SECRET`) worden bij de eerste start automatisch
   gegenereerd en op het storage-volume bewaard.
 - **Registratie** staat standaard dicht (`REGISTRATION_OPEN=false`).
@@ -128,7 +129,7 @@ Uitgebreide handleidingen staan in [`docs/`](docs/):
 
 ## Fasering
 
-Board wordt in fases gebouwd; zie [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md)
+rmboard wordt in fases gebouwd; zie [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md)
 en [`CHANGELOG.md`](CHANGELOG.md) voor de status.
 
 ## Licentie
