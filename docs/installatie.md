@@ -27,7 +27,22 @@ het achter je bestaande Caddy.
 
 2. **Caddy laten wijzen naar de app**
 
-   Voeg toe aan je Caddyfile:
+   **Caddy op de host** (buiten Docker) — de app is bereikbaar op de
+   gepubliceerde poort:
+
+   ```caddy
+   board.voorbeeld.nl {
+       reverse_proxy localhost:8080
+   }
+   ```
+
+   **Caddy in Docker** — start de stack met het override-bestand zodat de app
+   op het netwerk van je Caddy komt onder de naam `rmboard`:
+
+   ```bash
+   echo "CADDY_NETWORK=caddy" >> .env   # naam van jouw Caddy-netwerk
+   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+   ```
 
    ```caddy
    board.voorbeeld.nl {
@@ -68,6 +83,7 @@ Je ziet `"installed": true` en de status van de services zodra alles gezond is.
 | Variabele            | Standaard | Betekenis                                  |
 |----------------------|-----------|--------------------------------------------|
 | `APP_URL`            | —         | Je domein (schema + host). **Zelf zetten.**|
+| `CADDY_NETWORK`      | `caddy`   | Docker-netwerk van je Caddy (bij override). |
 | `REGISTRATION_OPEN`  | `false`   | Zelfregistratie toestaan.                  |
 | `MAX_UPLOAD_SIZE`    | `25`      | Max. uploadgrootte in MB.                  |
 | `AUDIT_RETENTION_DAYS` | `365`   | Retentie van het audit-log.                |

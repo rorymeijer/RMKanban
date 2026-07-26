@@ -29,8 +29,34 @@ De applicatie luistert op één platte HTTP-poort (standaard **8080**). Ze breng
 
 ## Caddy-snippet
 
-Plak dit in je bestaande Caddyfile. Reverb-websockets lopen via hetzelfde domein
-(pad `/app` en `/apps`), dus je hoeft geen tweede poort open te zetten:
+Er zijn twee opstellingen. Reverb-websockets lopen via hetzelfde domein (pad
+`/app` en `/apps`), dus je hoeft in beide gevallen geen tweede poort open te zetten.
+
+### 1. Caddy draait op de host
+
+Draait je Caddy direct op de host (buiten Docker), dan bereik je de app via de
+gepubliceerde poort. Plak dit in je Caddyfile:
+
+```caddy
+board.voorbeeld.nl {
+    reverse_proxy localhost:8080
+}
+```
+
+### 2. Caddy draait zelf in Docker
+
+Draait je Caddy in een container, start de stack dan met het meegeleverde
+override-bestand. De app komt dan mee op het netwerk van je Caddy en is daar
+bereikbaar onder de naam **`rmboard`** — geen host-poort nodig:
+
+```bash
+# Naam van het netwerk waar jouw Caddy in zit (standaard: caddy):
+echo "CADDY_NETWORK=caddy" >> .env
+
+docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+```
+
+En in je Caddyfile:
 
 ```caddy
 board.voorbeeld.nl {
@@ -38,9 +64,9 @@ board.voorbeeld.nl {
 }
 ```
 
-Dat is alles. Caddy handelt TLS af; de app honoreert de `X-Forwarded-*`-headers en
-proxyt websockets intern door naar Reverb. Wil je expliciet zijn over de websocket-
-upgrade, dan mag ook:
+Caddy handelt TLS af; de app honoreert de `X-Forwarded-*`-headers en proxyt
+websockets intern door naar Reverb. Wil je expliciet zijn over de websocket-
+upgrade, dan mag ook (vervang `rmboard` door `localhost` bij een host-Caddy):
 
 ```caddy
 board.voorbeeld.nl {
