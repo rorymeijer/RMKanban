@@ -1,12 +1,14 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTranslation } from '@/lib/i18n';
+import type { SharedProps } from '@/types';
 
 export default function Login({ registrationOpen: _registrationOpen }: { registrationOpen: boolean }) {
     const { t } = useTranslation();
+    const appName = usePage<SharedProps>().props.app.name;
     const form = useForm({ login: '', password: '', remember: false });
 
     function submit(e: React.FormEvent) {
@@ -23,8 +25,8 @@ export default function Login({ registrationOpen: _registrationOpen }: { registr
 
             <form onSubmit={submit} className="w-full max-w-sm rounded-xl border bg-card p-6 shadow-sm">
                 <div className="mb-6 text-center">
-                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-xl font-bold">
-                        B
+                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-xl font-bold uppercase">
+                        {appName.charAt(0)}
                     </div>
                     <h1 className="text-xl font-semibold">{t('auth.login.title')}</h1>
                 </div>

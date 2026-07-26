@@ -14,28 +14,35 @@ het achter je bestaande Caddy.
 1. **Clonen en opstarten**
 
    ```bash
-   git clone <deze-repo> board
-   cd board
-   echo "APP_URL=https://board.voorbeeld.nl" > .env
+   git clone <deze-repo> rmboard
+   cd rmboard
+   cp .env.example .env
+   # Zet in .env: APP_URL (je domein) en CADDY_NETWORK (je Caddy-netwerk).
    docker compose up -d
    ```
 
-   Bij de eerste start gebeurt automatisch:
+   `.env.example` is standaard ingesteld op een Caddy die zelf in Docker draait
+   (zie stap 2). Bij de eerste start gebeurt automatisch:
    - `APP_KEY` en `APP_SECRET` worden gegenereerd en op het storage-volume bewaard;
    - de app wacht tot PostgreSQL klaar is;
    - `php artisan migrate --force` draait de migraties.
 
 2. **Caddy laten wijzen naar de app**
 
-   Voeg toe aan je Caddyfile:
+   **Caddy in Docker (standaard).** `.env.example` schakelt dit al in via
+   `CADDY_NETWORK` en `COMPOSE_FILE`. De app draait mee op het netwerk van je
+   Caddy en is daar bereikbaar onder de naam `rmboard`. Voeg toe aan je Caddyfile:
 
    ```caddy
    board.voorbeeld.nl {
-       reverse_proxy localhost:8080
+       reverse_proxy rmboard:8080
    }
    ```
 
    Herlaad Caddy (`caddy reload` of `systemctl reload caddy`).
+
+   **Caddy op de host?** Zet dan `CADDY_NETWORK` en `COMPOSE_FILE` in `.env` in
+   commentaar en gebruik `reverse_proxy localhost:8080`.
 
 3. **Installer doorlopen**
 
@@ -68,6 +75,7 @@ Je ziet `"installed": true` en de status van de services zodra alles gezond is.
 | Variabele            | Standaard | Betekenis                                  |
 |----------------------|-----------|--------------------------------------------|
 | `APP_URL`            | —         | Je domein (schema + host). **Zelf zetten.**|
+| `CADDY_NETWORK`      | `caddy`   | Docker-netwerk van je Caddy (bij override). |
 | `REGISTRATION_OPEN`  | `false`   | Zelfregistratie toestaan.                  |
 | `MAX_UPLOAD_SIZE`    | `25`      | Max. uploadgrootte in MB.                  |
 | `AUDIT_RETENTION_DAYS` | `365`   | Retentie van het audit-log.                |

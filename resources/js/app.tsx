@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nProvider } from '@/lib/i18n';
 import type { SharedProps } from '@/types';
 
-const appName = 'Board';
+let appName = 'Board';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -25,7 +25,9 @@ createInertiaApp({
         return page();
     },
     setup({ el, App, props }) {
-        const locale = (props.initialPage.props as unknown as SharedProps).app?.locale ?? 'nl';
+        const shared = props.initialPage.props as unknown as SharedProps;
+        appName = shared.app?.name ?? appName;
+        const locale = shared.app?.locale ?? 'nl';
         createRoot(el).render(
             <QueryClientProvider client={queryClient}>
                 <I18nProvider locale={locale}>

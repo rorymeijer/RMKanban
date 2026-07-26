@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTranslation } from '@/lib/i18n';
+import type { SharedProps } from '@/types';
 
 interface Props {
     locales: string[];
@@ -21,6 +22,7 @@ type StepKey = 'app' | 'admin' | 'license' | 'smtp';
 
 export default function Wizard({ locales, defaultLocale, timezones, defaultTimezone, version, licensing }: Props) {
     const { t } = useTranslation();
+    const appName = usePage<SharedProps>().props.app.name;
     const [step, setStep] = useState(0);
 
     const STEPS: StepKey[] = ['app', 'admin', ...(licensing ? (['license'] as StepKey[]) : []), 'smtp'];
@@ -59,8 +61,8 @@ export default function Wizard({ locales, defaultLocale, timezones, defaultTimez
 
             <div className="w-full max-w-lg">
                 <div className="mb-8 text-center">
-                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-xl font-bold">
-                        B
+                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground text-xl font-bold uppercase">
+                        {appName.charAt(0)}
                     </div>
                     <h1 className="text-2xl font-semibold tracking-tight">{t('install.title')}</h1>
                     <p className="mt-1 text-sm text-muted-foreground">{t('app.tagline')}</p>
@@ -225,7 +227,7 @@ export default function Wizard({ locales, defaultLocale, timezones, defaultTimez
                     </div>
                 </div>
 
-                <p className="mt-4 text-center text-xs text-muted-foreground">Board {version}</p>
+                <p className="mt-4 text-center text-xs text-muted-foreground">{appName} {version}</p>
             </div>
         </div>
     );

@@ -1,0 +1,35 @@
+# Koppelt de rmboard-stack aan een bestaande, in Docker draaiende Caddy.
+#
+# Gebruik dit override-bestand naast het hoofdbestand:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+#
+# Wat het doet: de web-service gaat óók meedraaien op het netwerk van jouw
+# Caddy en is daar bereikbaar onder de naam "rmboard". In je Caddyfile:
+#
+#   board.voorbeeld.nl {
+#       reverse_proxy rmboard:8080
+#   }
+#
+# Stappen:
+#   1) Zorg dat je Caddy-container op een extern Docker-netwerk zit en zet de
+#      naam daarvan in CADDY_NETWORK (standaard: caddy). Bijvoorbeeld in .env:
+#         CADDY_NETWORK=caddy
+#   2) Start met het commando hierboven.
+#   3) Voeg de reverse_proxy-regel toe aan je Caddyfile en herlaad Caddy.
+#
+# De host-poort (8080) blijft gepubliceerd; heb je die niet nodig omdat Caddy
+# intern praat, zet dan APP_PORT op 127.0.0.1:8080 of laat 'm zoals hij is.
+
+services:
+  web:
+    networks:
+      board:
+      edge:
+        aliases:
+          - rmboard
+
+networks:
+  edge:
+    external: true
+    name: ${CADDY_NETWORK:-caddy}
