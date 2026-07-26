@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend — PHPStan & Pest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP 8.4 opzetten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_pgsql, pgsql, intl, zip, gd, bcmath, pcntl, redis
+          coverage: none
+          tools: composer:v2
+
+      - name: Composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Dependencies installeren
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: VERSION-bestand
+        run: echo "${GITHUB_REF_NAME}-${GITHUB_SHA::7}" > VERSION
+
+      - name: PHPStan (level 8)
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
+      - name: Pint (code style)
+        run: vendor/bin/pint --test
+
+      - name: Pest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+        run: vendor/bin/pest --ci
+
+  frontend:
+    name: Frontend — ESLint & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node 22 opzetten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Dependencies installeren
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: TypeScript + Vite build
+        run: npm run build
+
+  e2e:
+    name: Playwright — kritieke flow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, sqlite3, intl, gd, bcmath
+          tools: composer:v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Dependencies
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress
+          npm ci
+
+      - name: App voorbereiden (lege sqlite-database)
+        run: |
+          cp .env.example .env || true
+          echo "APP_KEY=" > .env
+          echo "APP_ENV=testing" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$PWD/database/database.sqlite" >> .env
+          echo "SESSION_DRIVER=file" >> .env
+          echo "CACHE_STORE=file" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "BROADCAST_CONNECTION=null" >> .env
+          echo "SCOUT_DRIVER=collection" >> .env
+          php artisan key:generate
+          : > database/database.sqlite
+          php artisan migrate --force
+          npm run build
+
+      - name: Playwright-browser installeren
+        run: npx playwright install --with-deps chromium
+
+      - name: E2e-test
+        run: npm run test:e2e
