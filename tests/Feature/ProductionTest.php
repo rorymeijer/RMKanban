@@ -58,7 +58,7 @@ it('start de OIDC-flow als SSO aan staat', function (): void {
 });
 
 it('serveert de zelf-gehoste API-docs en offline-pagina', function (): void {
-    $this->get('/api/docs')->assertOk()->assertSee('Board API');
+    $this->get('/api/docs')->assertOk()->assertSee('rmboard API');
     $this->get('/api/openapi.json')->assertOk()->assertJsonPath('openapi', '3.1.0');
     $this->get('/offline')->assertOk()->assertSee('offline');
 });

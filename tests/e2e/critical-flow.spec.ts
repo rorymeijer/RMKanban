@@ -11,7 +11,7 @@ test('verse installatie tot en met een kaart aanmaken', async ({ page }) => {
     // 1. Verse start → de installer verschijnt.
     await page.goto('/');
     await expect(page).toHaveURL(/\/install/);
-    await expect(page.getByRole('heading', { name: /Board installeren/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /rmboard installeren/i })).toBeVisible();
 
     // 2. Stap "Toepassing" → volgende.
     await page.getByRole('button', { name: /Volgende/i }).click();
@@ -29,10 +29,10 @@ test('verse installatie tot en met een kaart aanmaken', async ({ page }) => {
 
     // 5. Na installatie: dashboard met het demo-board.
     await expect(page).toHaveURL('/');
-    await page.getByText('Welkom bij Board').click();
+    await page.getByText('Welkom bij rmboard').click();
 
     // 6. Board opent met lijsten; maak een kaart aan.
-    await expect(page.getByRole('heading', { name: 'Welkom bij Board' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welkom bij rmboard' })).toBeVisible();
     const addCard = page.getByRole('button', { name: /Kaart toevoegen/i }).first();
     await addCard.click();
     await page.getByPlaceholder('Titel van de kaart…').fill('E2E testkaart');

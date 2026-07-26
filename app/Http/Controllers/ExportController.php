@@ -48,7 +48,7 @@ class ExportController extends Controller
 
         $cards = $board->cards()->whereNotNull('due_date')->whereNull('archived_at')->get();
 
-        $lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Board//NL'];
+        $lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//rmboard//NL'];
         foreach ($cards as $card) {
             $date = $card->due_date?->format('Ymd');
             $lines[] = 'BEGIN:VEVENT';

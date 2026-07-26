@@ -10,11 +10,37 @@ geen tracking, geen CDN's.
 
 ## Screenshots
 
-| Bord (licht) | Bord (donker) |
-|---|---|
-| ![Bordweergave, licht thema](docs/screenshots/board-light.png) | ![Bordweergave, donker thema](docs/screenshots/board-dark.png) |
+**Bordweergave** — licht & donker thema:
 
-De weergavenaam (hier `rmboard`) volgt automatisch uit `APP_NAME`.
+| Licht | Donker |
+|---|---|
+| ![Bord, licht thema](docs/screenshots/board-light.png) | ![Bord, donker thema](docs/screenshots/board-dark.png) |
+
+**Weergaves** — tabel, kalender en tijdlijn:
+
+| Tabel | Kalender | Tijdlijn |
+|---|---|---|
+| ![Tabelweergave](docs/screenshots/board-table.png) | ![Kalenderweergave](docs/screenshots/board-calendar.png) | ![Tijdlijnweergave](docs/screenshots/board-timeline.png) |
+
+**Kaart-detail & dashboard:**
+
+| Kaart-detail | Dashboard | Mijn werk |
+|---|---|---|
+| ![Kaart-detail](docs/screenshots/card-modal.png) | ![Dashboard](docs/screenshots/dashboard-light.png) | ![Mijn werk](docs/screenshots/my-work.png) |
+
+**Beheer & toegang:**
+
+| Beheer | Licentie | Inloggen |
+|---|---|---|
+| ![Beheer](docs/screenshots/admin.png) | ![Licentie](docs/screenshots/admin-license.png) | ![Inloggen](docs/screenshots/login-light.png) |
+
+**Installatiewizard** (verschijnt automatisch bij een verse start):
+
+| Toepassing | Beheerder |
+|---|---|
+| ![Wizard, stap toepassing](docs/screenshots/wizard-app-light.png) | ![Wizard, stap beheerder](docs/screenshots/wizard-admin-light.png) |
+
+De weergavenaam (hier `rmboard`) volgt overal automatisch uit `APP_NAME`.
 
 ## Snel starten
 
